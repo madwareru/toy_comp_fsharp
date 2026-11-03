@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>toy_comp_core</RootNamespace>
+
+    <IsPackable>false</IsPackable>
+    <GenerateProgramFile>false</GenerateProgramFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="ISAShared.fs" />
+    <Compile Include="ISAMem.fs" />
+    <Compile Include="ISAStack.fs" />
+    <Compile Include="ISAReg.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+</Project>
