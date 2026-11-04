@@ -17,11 +17,8 @@
     <Compile Include="ISAStackParser.fs" />
     <Compile Include="ISAStackParserTests.fs" />
     <Compile Include="ISARegParser.fs" />
+    <Compile Include="ISARegParserTests.fs" />
     <Compile Include="Program.fs" />
-    <Content Include="Resources\Asm\fact.asmm" />
-    <Content Include="Resources\Asm\fact.asms" />
-    <Content Include="Resources\Asm\README.md" />
-    <Content Include="Resources\Asm\fact.asmr" />
   </ItemGroup>
 
   <ItemGroup>

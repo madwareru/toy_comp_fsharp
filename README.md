@@ -1,0 +1,83 @@
+## toy_comp_fsharp
+This is implementation of a [toy_comp](https://github.com/true-grue/toy_comp) using F# language
+
+### What's inside
+The project includes:
+- [ ] Specification for a **memory-to-memory** based ISA
+- [ ] Specification for a **stack** based ISA
+- [ ] Specification for a **register** based ISA
+- [ ] Grammar definition for a simple imperative language **L**
+- [ ] Semantics definition for each construct of an **L** language
+- [x] Parser for a **memory-to-memory** based ISA assembly
+- [x] Parser for a **stack** based ISA assembly
+- [x] Parser for a **register** based ISA assembly
+- [x] Interpreter for a **memory-to-memory** based ISA assembly
+- [x] Interpreter for a **stack** based ISA assembly
+- [x] Interpreter for a **register** based ISA assembly
+- [ ] Parser for **L**
+- [ ] Interpreter of **L**
+- [ ] Compiler from **L** to a **memory-to-memory** based ISA assembly
+- [ ] Compiler from **L** to a **stack** based ISA assembly
+- [ ] Compiler from **L** to a **register** based ISA assembly
+
+### What this project does not do as precisely as an original toy_comp
+The key difference from an original project is a syntax for a language **L**.
+
+While **L** is a subset of a **python** in an original project, which is being 
+parsed by standard python **ast** module, this is not convenient to represent in 
+an implementation which is not written in python.
+
+By this fact we slightly change a grammar to be closer to ruby (with end keyword 
+as a closing token for a block). There is also a mandatory ';' and the end of each 
+statement to simplify parsing. The syntax is being parsed by the parser combinator 
+library FParsec.
+
+So, if the original code looked like this:
+```python
+limit = 50
+n = 2
+
+while n <= limit:
+    d = 2
+    prime = 1
+    while d < n:
+        rest = n
+        while d <= rest:
+            rest = rest - d
+        prime = prime * (0 < rest)
+        d = d + 1
+    if prime == 1:
+        out(n)
+    n = n + 1
+```
+
+Then the code in this implementation will look like this:
+```ruby
+limit = 50;
+n = 2;
+
+while n <= limit:
+    d = 2;
+    prime = 1;
+    
+    while d < n:
+        rest = n;
+        
+        while d <= rest:
+            rest = rest - d;
+        end;
+        
+        prime = prime * (0 < rest);
+        d = d + 1;
+    end;
+    
+    if prime == 1:
+        outn(n);
+    end;
+    
+    n = n + 1;
+end;
+```
+There are also additional operation `OUTN` introduced 
+to differentiate between the need to put ASCII character
+or to print a decimal number with a 

@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="toy_comp_core/toy_comp_core.fsproj" />
+  <Project Path="toy_comp_isa_interpreters/toy_comp_isa_interpreters.fsproj" />
   <Project Path="toy_comp_isa_parsers/toy_comp_isa_parsers.fsproj" />
 </Solution>

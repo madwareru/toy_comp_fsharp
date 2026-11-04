@@ -2,24 +2,17 @@ module toy_comp_core.ISAReg
 
 open toy_comp_core.ISAShared
 
-type Register = Register of int
-
-type LoadImm = { DestinationRegister: Register; Value: ImmValue }
-type MemLoad = { DestinationRegister: Register; Source: MemoryLocation }
-type MemStore = { Destination: MemoryLocation; SourceRegister: Register }
-type Binary = { Op: BinOp; Destination: Register; Lhs: Register; Rhs: Register }
-type JumpIfZero = { DestinationLabel: Label; CheckedRegister: Register }
-type Jump = { DestinationLabel: Label }
-type OutOp = { RegisterToOutput: Register }
+type Register = Register of byte
 
 type Operation =
-    | Li of LoadImm
-    | Ld of MemLoad
-    | St of MemStore
-    | Bin of Binary
-    | Jz of JumpIfZero
-    | Jmp of Jump
-    | Out of OutOp
+    | Li of Register * ImmValue
+    | Ld of Register * MemoryLocation
+    | St of MemoryLocation * Register
+    | Bin of BinOp * Register * Register * Register
+    | Jz of Label * Register
+    | Jmp of Label
+    | OutC of Register
+    | OutN of Register
     
 type Block = { Ops: Operation list; NextBlockLabel: Label }
 

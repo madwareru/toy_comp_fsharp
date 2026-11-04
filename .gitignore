@@ -2,4 +2,6 @@
 /toy_comp_core/obj
 /toy_comp_isa_parsers/bin
 /toy_comp_isa_parsers/obj
+/toy_comp_isa_interpreters/bin
+/toy_comp_isa_interpreters/obj
 toy_comp_fsharp.sln.DotSettings.user
