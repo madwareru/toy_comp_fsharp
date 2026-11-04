@@ -12,17 +12,13 @@
 
   <ItemGroup>
     <Compile Include="ISAMemInterpreter.fs" />
-    <Compile Include="ISAMemInterpreterTests.fs" />
     <Compile Include="ISAStackInterpreter.fs" />
-    <Compile Include="ISAStackInterpreterTests.fs" />
     <Compile Include="ISARegInterpreter.fs" />
-    <Compile Include="ISARegInterpreterTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\toy_comp_core\toy_comp_core.fsproj" />
-    <ProjectReference Include="..\toy_comp_isa_parsers\toy_comp_isa_parsers.fsproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-module toy_comp_isa_parsers.ISAMemParserTests
+module toy_comp_isa_parser_tests.ISAMemParserTests
 
 open NUnit.Framework
 open toy_comp_core.ISAShared

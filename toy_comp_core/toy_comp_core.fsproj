@@ -14,6 +14,7 @@
     <Compile Include="ISAMem.fs" />
     <Compile Include="ISAStack.fs" />
     <Compile Include="ISAReg.fs" />
+    <Compile Include="AST.fs" />
     <Compile Include="ResourceUtility.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

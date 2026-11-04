@@ -1,4 +1,4 @@
-module toy_comp_isa_interpreters.ISAStackInterpreterTests
+module toy_comp_isa_interpreter_tests.ISAStackInterpreterTests
 
 open NUnit.Framework
 open toy_comp_core.ResourceUtility

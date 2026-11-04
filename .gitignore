@@ -2,6 +2,12 @@
 /toy_comp_core/obj
 /toy_comp_isa_parsers/bin
 /toy_comp_isa_parsers/obj
+/toy_comp_isa_parser_tests/bin
+/toy_comp_isa_parser_tests/obj
 /toy_comp_isa_interpreters/bin
 /toy_comp_isa_interpreters/obj
+/toy_comp_isa_interpreter_tests/bin
+/toy_comp_isa_interpreter_tests/obj
+/toy_comp_compiler/bin
+/toy_comp_compiler/obj
 toy_comp_fsharp.sln.DotSettings.user

@@ -6,5 +6,4 @@ type Label =
     | ProgramStartLabel
     | Label of string
     | ProgramEndLabel
-
 type BinOp = Add | Sub | Mul | Eq | Lt | Leq
