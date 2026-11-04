@@ -45,6 +45,11 @@
     <EmbeddedResource Include="Resources\ExpectedOuts\primes.txt" />
     <EmbeddedResource Include="Resources\ExpectedOuts\sierpinski.txt" />
     <EmbeddedResource Include="Resources\Programs\primes.mrb" />
+    <EmbeddedResource Include="Resources\Programs\fact.mrb" />
+    <EmbeddedResource Include="Resources\Programs\fib.mrb" />
+    <EmbeddedResource Include="Resources\Programs\carpet.mrb" />
+    <EmbeddedResource Include="Resources\Programs\sierpinski.mrb" />
+    <EmbeddedResource Include="Resources\Programs\mandelbrot.mrb" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 limit = 50;
 n = 2;
 
-while n + limit:
+while n <= limit:
     d = 2;
     prime = 1;
     

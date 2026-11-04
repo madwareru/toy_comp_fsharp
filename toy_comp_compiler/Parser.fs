@@ -36,7 +36,7 @@ let parse_term_expr: Parser<Expr, unit> =
         parse_var_name_expr
         parse_constant_expr
         parse_lparen >>. parse_expr .>> parse_rparen
-    ]
+    ] .>> ws
     
 let opp = OperatorPrecedenceParser<Expr, unit, unit>()
 opp.TermParser <- parse_term_expr
@@ -83,10 +83,10 @@ do parse_stmt_ref.Value <-
     choice [
         parse_print_number
         parse_put_char
-        parse_if_else
+        attempt parse_if_else
         parse_if
         parse_while
-        parse_assignment
+        attempt parse_assignment
     ] .>> parse_semicolon
 
 let parse_program (text: string) =
