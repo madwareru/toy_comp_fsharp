@@ -1,8 +1,9 @@
 <Solution>
-  <Project Path="toy_comp_compiler/toy_comp_compiler.fsproj" />
   <Project Path="toy_comp_core/toy_comp_core.fsproj" />
   <Project Path="toy_comp_isa_interpreters/toy_comp_isa_interpreters.fsproj" />
   <Project Path="toy_comp_isa_interpreter_tests/toy_comp_isa_interpreter_tests.fsproj" />
   <Project Path="toy_comp_isa_parsers/toy_comp_isa_parsers.fsproj" />
+  <Project Path="toy_comp_compiler/toy_comp_compiler.fsproj" />
+  <Project Path="toy_comp_compiler_tests/toy_comp_compiler_tests.fsproj" />
   <Project Path="toy_comp_isa_parser_tests/toy_comp_isa_parser_tests.fsproj" />
 </Solution>

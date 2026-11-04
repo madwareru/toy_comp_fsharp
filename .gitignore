@@ -10,4 +10,6 @@
 /toy_comp_isa_interpreter_tests/obj
 /toy_comp_compiler/bin
 /toy_comp_compiler/obj
+/toy_comp_compiler_tests/bin
+/toy_comp_compiler_tests/obj
 toy_comp_fsharp.sln.DotSettings.user

@@ -30,6 +30,11 @@ let read_sample_asm isa_kind sample =
         | Reg -> $"Asm.{name_str}.asmr"
     res_name |> read_resource_as_text
     
+let read_sample_program sample =
+    let name_str = sample |> get_file_name
+    let res_name = $"Programs.{name_str}.mrb"
+    res_name |> read_resource_as_text
+    
 let read_expected_out sample =
     let name_str = sample |> get_file_name
     let res_name = $"ExpectedOuts.{name_str}.txt"

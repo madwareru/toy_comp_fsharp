@@ -44,6 +44,7 @@
     <EmbeddedResource Include="Resources\ExpectedOuts\mandelbrot.txt" />
     <EmbeddedResource Include="Resources\ExpectedOuts\primes.txt" />
     <EmbeddedResource Include="Resources\ExpectedOuts\sierpinski.txt" />
+    <EmbeddedResource Include="Resources\Programs\primes.mrb" />
   </ItemGroup>
 
 </Project>
