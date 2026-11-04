@@ -14,8 +14,8 @@ The project includes:
 - [x] Interpreter for a **memory-to-memory** based ISA assembly
 - [x] Interpreter for a **stack** based ISA assembly
 - [x] Interpreter for a **register** based ISA assembly
-- [ ] Parser for **L**
-- [ ] Interpreter of **L**
+- [x] Parser for **L**
+- [x] Interpreter of **L**
 - [ ] Compiler from **L** to a **memory-to-memory** based ISA assembly
 - [ ] Compiler from **L** to a **stack** based ISA assembly
 - [ ] Compiler from **L** to a **register** based ISA assembly
