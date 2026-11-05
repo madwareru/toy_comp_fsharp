@@ -64,13 +64,13 @@ let compile_program_isa_reg (mode : CompilationMode) (program : SourceProgram) :
                         yield Op(OutN(Register(reg_top)))
                     | Branch(_, Block[], Block[])
                     | Branch(Constant(ImmValue(0L)), _, Block[])
-                    | Branch(Constant(ImmValue(1L)), Block[], _)
+                    | Branch(Constant(ImmValue _), Block[], _)
                     | WhileLoop(Constant(ImmValue(0L)), _) ->
                         // Dead code, legally do nothing here
                         ()
                     | Branch(Constant(ImmValue(0L)), _, else_block) ->
                         yield! compile_block else_block
-                    | Branch(Constant(ImmValue(1L)), then_block, _) ->
+                    | Branch(Constant(ImmValue _), then_block, _) ->
                         yield! compile_block then_block
                     | Branch(cond, then_block, Block([])) ->
                         let label_after = allocate_label ()

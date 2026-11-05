@@ -72,6 +72,39 @@ let compile_program_isa_mem (mode : CompilationMode) (program : SourceProgram) :
                     ) 
                 }
                 
+        let rec compile_expr_direct dst = function
+            | Constant(value) -> seq { yield Op(Li(dst, value)) }
+            | Variable(src) -> seq { yield Op(Mov(dst, src)) }
+            | Binary(bin_op, Variable(lhs), Variable(rhs)) ->
+                seq {
+                    yield Op(Bin(bin_op, dst, lhs, rhs))
+                }
+            | Binary(bin_op, Constant(lhs), Variable(rhs)) ->
+                seq {
+                    yield Op(Li(get_tmp 0uy, lhs))
+                    yield Op(Bin(bin_op, dst, get_tmp 0uy, rhs))
+                }
+            | Binary(bin_op, Variable(lhs), Constant(rhs)) ->
+                seq {
+                    yield Op(Li(get_tmp 0uy, rhs))
+                    yield Op(Bin(bin_op, dst, lhs, get_tmp 0uy))
+                }
+            | Binary(bin_op, lhs, rhs) ->
+                seq {
+                    yield! compile_expr lhs
+                    yield! compile_expr rhs
+                    dec_reg_top ()
+                    yield Op(
+                        Bin(
+                            bin_op,
+                            dst,
+                            get_tmp 1uy,
+                            get_tmp 0uy
+                        )
+                    )
+                    dec_reg_top ()
+                }
+                
         let rec compile_block = function
             | Block(statements) -> seq {
                 for statement in statements do
@@ -83,9 +116,7 @@ let compile_program_isa_mem (mode : CompilationMode) (program : SourceProgram) :
                     | Assignment(dst, Binary(bin_op, Variable(lhs), Variable(rhs))) ->
                         yield Op(Bin(bin_op, dst, lhs, rhs))
                     | Assignment(dst, src) ->
-                        yield! compile_expr src
-                        dec_reg_top()
-                        yield Op(Mov(dst, get_tmp 0uy))
+                        yield! compile_expr_direct dst src
                     | PutChar(Variable(src)) ->
                         yield Op(OutС(src))
                     | PutChar(src) ->
@@ -146,6 +177,14 @@ let compile_program_isa_mem (mode : CompilationMode) (program : SourceProgram) :
                         yield LabelDef(loop_label)
                         yield! compile_block body
                         yield Op(Jmp(loop_label))
+                    | WhileLoop(Variable(cond), body) ->
+                        let loop_label = allocate_label ()
+                        let label_after = allocate_label ()
+                        yield LabelDef(loop_label)
+                        yield Op(Jz(label_after, cond))
+                        yield! compile_block body
+                        yield Op(Jmp(loop_label))
+                        yield LabelDef(label_after)
                     | WhileLoop(cond, body) ->
                         let loop_label = allocate_label ()
                         let label_after = allocate_label ()

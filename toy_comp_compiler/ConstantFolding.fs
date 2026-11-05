@@ -36,7 +36,7 @@ let fold_consts_in_program = function
                 ops |> List.map (function
                     | Assignment(loc, expr) -> Assignment(loc, fold_expr expr)
                     | PutChar(expr) -> PutChar(fold_expr expr)
-                    | PrintNumber(expr) -> PrintNumber(expr)
+                    | PrintNumber(expr) -> PrintNumber(fold_expr expr)
                     | Branch(cond_expr, then_block, else_block) ->
                         Branch(fold_expr cond_expr, fold_block then_block, fold_block else_block)
                     | WhileLoop(cond_expr, body) -> WhileLoop(fold_expr cond_expr, fold_block body)
