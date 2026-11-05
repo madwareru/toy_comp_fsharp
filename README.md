@@ -16,11 +16,11 @@ The project includes:
 - [x] Interpreter for a **register** based ISA assembly
 - [x] Parser for **L**
 - [x] Interpreter of **L**
-- [ ] Compiler from **L** to a **memory-to-memory** based ISA assembly
+- [x] Compiler from **L** to a **memory-to-memory** based ISA assembly
 - [x] Compiler from **L** to a **stack** based ISA assembly
-- [ ] Compiler from **L** to a **register** based ISA assembly
+- [x] Compiler from **L** to a **register** based ISA assembly
 
-### What this project does not do as precisely as an original toy_comp
+### What this project does differently in comparison to original toy_comp project
 The key difference from an original project is a syntax for a language **L**.
 
 While **L** is a subset of a **python** in an original project, which is being 
@@ -78,6 +78,10 @@ while n <= limit:
     n = n + 1;
 end;
 ```
+
 There are also additional operation `OUTN` introduced 
 to differentiate between the need to put ASCII character
-or to print a decimal number with a 
+or to print a line with a decimal number.
+
+File extension for program texts are changed from '.mpy' to '.mrb' 
+to reflect changes mentioned earlier.

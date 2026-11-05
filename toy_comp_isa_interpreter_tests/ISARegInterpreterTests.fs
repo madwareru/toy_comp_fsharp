@@ -7,16 +7,14 @@ open toy_comp_isa_interpreters.ISARegInterpreter
 
 [<Test>]
 let testIfAllSampleAssemblyParsesAndInterpretsAsExpected () =
-    for sample_caption, sample in [
-        "=== fib ===", SampleAsm.Fib
-        "=== fact ===", SampleAsm.Fact
-        "=== primes ===", SampleAsm.Primes
-        "=== sierpinski ===", SampleAsm.Sierpinski
-        "=== carpet ===", SampleAsm.Carpet
-        "=== mandelbrot ===", SampleAsm.Mandelbrot
+    for sample in [
+        SampleAsm.Fib
+        SampleAsm.Fact
+        SampleAsm.Primes
+        SampleAsm.Sierpinski
+        SampleAsm.Carpet
+        SampleAsm.Mandelbrot
     ] do
-        System.Console.WriteLine(sample_caption)
         let expected_out = sample |> read_expected_out
         let result = sample |> read_sample_asm ISAKind.Reg |> parse_isa_reg |> interp_isa_reg_program
-        System.Console.WriteLine(result)
         Assert.AreEqual(expected_out, result)

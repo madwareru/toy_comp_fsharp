@@ -30,7 +30,7 @@ let factorialProgram =
     ])
 
 [<Test>]
-let testIfFactorialAssemblyParses () =
+let testIfFactorialProgramParsesCorrectly () =
     Assert.AreEqual(factorialProgram, factorialAssembly |> parse_program)
 
 [<Test>]
