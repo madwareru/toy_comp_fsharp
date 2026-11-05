@@ -16,10 +16,7 @@ let interp_isa_stack_program = function
         let mutable text_buffer = StringBuilder()
         
         let mem_set key value = memory <- memory |> Map.add key value
-        let mem_get key =
-            match memory |> Map.tryFind key with
-            | Some v -> v
-            | _ -> failwith $"value for {key} is undefined"
+        let mem_get key = memory[key]
         
         let stack_push value = stack <- value :: stack
         let stack_pop () =

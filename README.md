@@ -19,6 +19,7 @@ The project includes:
 - [x] Compiler from **L** to a **memory-to-memory** based ISA assembly
 - [x] Compiler from **L** to a **stack** based ISA assembly
 - [x] Compiler from **L** to a **register** based ISA assembly
+- [x] Simple constant folding optimization to make a generated assembly more compact
 
 ### What this project does differently in comparison to original toy_comp project
 The key difference from an original project is a syntax for a language **L**.
@@ -85,3 +86,6 @@ or to print a line with a decimal number.
 
 File extension for program texts are changed from '.mpy' to '.mrb' 
 to reflect changes mentioned earlier.
+
+For this project we are also let user to write negative integer 
+literals (which will have like #-42 for -42, for example)

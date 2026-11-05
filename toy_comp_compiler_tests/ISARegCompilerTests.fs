@@ -4,6 +4,7 @@ open NUnit.Framework
 open toy_comp_compiler.CompilerShared
 open toy_comp_core.ResourceUtility
 open toy_comp_compiler.Parser
+open toy_comp_compiler.ConstantFolding
 open toy_comp_compiler.ISARegCompiler
 open toy_comp_isa_parsers.ISARegParser
 open toy_comp_isa_interpreters.ISARegInterpreter
@@ -19,7 +20,12 @@ let testIfAllSampleProgramsCompilesAndInterpretsAsExpected () =
         SampleAsm.Mandelbrot
     ] do
         let expected_out = sample |> read_expected_out
-        let isa = sample |> read_sample_program |> parse_program |> compile_program_isa_reg CompilationMode.ISA
+        let isa =
+            sample
+            |> read_sample_program
+            |> parse_program
+            |> fold_consts_in_program
+            |> compile_program_isa_reg CompilationMode.ISA
         match isa with
         | CompiledISA isa ->
             let result = isa |> interp_isa_reg_program
@@ -37,7 +43,12 @@ let testIfAllSampleProgramsCompilesToTextCorrectly () =
         SampleAsm.Mandelbrot
     ] do
         let expected_out = sample |> read_expected_out
-        let isa = sample |> read_sample_program |> parse_program |> compile_program_isa_reg CompilationMode.Text
+        let isa =
+            sample
+            |> read_sample_program
+            |> parse_program
+            |> fold_consts_in_program
+            |> compile_program_isa_reg CompilationMode.Text
         match isa with
         | CompiledText text ->
             let result = text |> parse_isa_reg |> interp_isa_reg_program

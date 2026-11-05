@@ -45,6 +45,18 @@ let compile_program_isa_mem (mode : CompilationMode) (program : SourceProgram) :
                     yield Op(Bin(bin_op, get_tmp 0uy, lhs, rhs))
                     inc_reg_top ()
                 }
+            | Binary(bin_op, Constant(lhs), Variable(rhs)) ->
+                seq {
+                    yield Op(Li(get_tmp 0uy, lhs))
+                    yield Op(Bin(bin_op, get_tmp 0uy, get_tmp 0uy, rhs))
+                    inc_reg_top ()
+                }
+            | Binary(bin_op, Variable(lhs), Constant(rhs)) ->
+                seq {
+                    yield Op(Li(get_tmp 0uy, rhs))
+                    yield Op(Bin(bin_op, get_tmp 0uy, lhs, get_tmp 0uy))
+                    inc_reg_top ()
+                }
             | Binary(bin_op, lhs, rhs) ->
                 seq {
                     yield! compile_expr lhs

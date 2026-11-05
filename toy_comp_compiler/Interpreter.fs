@@ -8,10 +8,8 @@ let interp_program = function
     | Program top_level_block ->
         let mutable memory = Map.empty
         let mem_set key value = memory <- memory |> Map.add key value
-        let mem_get key =
-            match memory |> Map.tryFind key with
-            | Some v -> v
-            | _ -> failwith $"value for {key} is undefined"
+        let mem_get key = memory[key]
+
         let mutable text_buffer = StringBuilder()
             
         let rec interp_expr = function

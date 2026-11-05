@@ -16,6 +16,7 @@
         <Compile Include="ISAStackCompilerTests.fs" />
         <Compile Include="ISARegCompilerTests.fs" />
         <Compile Include="ISAMemCompilerTests.fs" />
+        <Compile Include="ConstantFoldingTests.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
