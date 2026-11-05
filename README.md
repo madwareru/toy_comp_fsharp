@@ -28,8 +28,8 @@ While **L** is a subset of a **python** in an original project, which is being
 parsed by standard python **ast** module, this is not convenient to represent in 
 an implementation which is not written in python.
 
-By this fact we slightly change a grammar to be closer to ruby (with end keyword 
-as a closing token for a block). There is also a mandatory ';' and the end of each 
+By this fact a slightl change in a grammar was made, making syntax closer to ruby 
+(with end keyword as a closing token for a block). There is also a mandatory ';' and the end of each 
 statement to simplify parsing. The syntax is being parsed by the parser combinator 
 library FParsec.
 
@@ -87,5 +87,7 @@ or to print a line with a decimal number.
 File extension for program texts are changed from '.mpy' to '.mrb' 
 to reflect changes mentioned earlier.
 
-For this project we are also let user to write negative integer 
-literals (which will have like #-42 for -42, for example)
+For this project there are also a possibility for the user to write 
+negative integer literals in assembly files (which will have a look 
+like #-42 for -42, for example). This was made to add constant 
+folding for cases like 0 - 9 in a mandelbrot example.

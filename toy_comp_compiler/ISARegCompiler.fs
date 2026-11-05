@@ -62,19 +62,16 @@ let compile_program_isa_reg (mode : CompilationMode) (program : SourceProgram) :
                         yield! compile_expr src
                         dec_reg_top()
                         yield Op(OutN(Register(reg_top)))
-                    | WhileLoop(cond, body) ->
-                        let loop_label = allocate_label ()
-                        let label_after = allocate_label ()
-                        yield LabelDef(loop_label)
-                        yield! compile_expr cond
-                        dec_reg_top()
-                        yield Op(Jz(label_after, Register(reg_top)))
-                        yield! compile_block body
-                        yield Op(Jmp(loop_label))
-                        yield LabelDef(label_after)
-                    | Branch(_, Block[], Block[]) ->
+                    | Branch(_, Block[], Block[])
+                    | Branch(Constant(ImmValue(0L)), _, Block[])
+                    | Branch(Constant(ImmValue(1L)), Block[], _)
+                    | WhileLoop(Constant(ImmValue(0L)), _) ->
                         // Dead code, legally do nothing here
                         ()
+                    | Branch(Constant(ImmValue(0L)), _, else_block) ->
+                        yield! compile_block else_block
+                    | Branch(Constant(ImmValue(1L)), then_block, _) ->
+                        yield! compile_block then_block
                     | Branch(cond, then_block, Block([])) ->
                         let label_after = allocate_label ()
                         yield! compile_expr cond
@@ -92,6 +89,22 @@ let compile_program_isa_reg (mode : CompilationMode) (program : SourceProgram) :
                         yield Op(Jmp(label_after))
                         yield LabelDef(else_label)
                         yield! compile_block else_block
+                        yield LabelDef(label_after)
+                    | WhileLoop(Constant(ImmValue _), body) ->
+                        // Infinite loop
+                        let loop_label = allocate_label ()
+                        yield LabelDef(loop_label)
+                        yield! compile_block body
+                        yield Op(Jmp(loop_label))
+                    | WhileLoop(cond, body) ->
+                        let loop_label = allocate_label ()
+                        let label_after = allocate_label ()
+                        yield LabelDef(loop_label)
+                        yield! compile_expr cond
+                        dec_reg_top()
+                        yield Op(Jz(label_after, Register(reg_top)))
+                        yield! compile_block body
+                        yield Op(Jmp(loop_label))
                         yield LabelDef(label_after)
             }
             

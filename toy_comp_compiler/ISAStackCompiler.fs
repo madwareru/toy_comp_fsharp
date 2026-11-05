@@ -45,18 +45,16 @@ let compile_program_isa_stack (mode : CompilationMode) (program : SourceProgram)
                     | PrintNumber(src) ->
                         yield! compile_expr src
                         yield Op(OutN)
-                    | WhileLoop(cond, body) ->
-                        let loop_label = allocate_label ()
-                        let label_after = allocate_label ()
-                        yield LabelDef(loop_label)
-                        yield! compile_expr cond
-                        yield Op(Jz(label_after))
-                        yield! compile_block body
-                        yield Op(Jmp(loop_label))
-                        yield LabelDef(label_after)
-                    | Branch(_, Block[], Block[]) ->
+                    | Branch(_, Block[], Block[])
+                    | Branch(Constant(ImmValue(0L)), _, Block[])
+                    | Branch(Constant(ImmValue(1L)), Block[], _)
+                    | WhileLoop(Constant(ImmValue(0L)), _) ->
                         // Dead code, legally do nothing here
                         ()
+                    | Branch(Constant(ImmValue(0L)), _, else_block) ->
+                        yield! compile_block else_block
+                    | Branch(Constant(ImmValue(1L)), then_block, _) ->
+                        yield! compile_block then_block
                     | Branch(cond, then_block, Block([])) ->
                         let label_after = allocate_label ()
                         yield! compile_expr cond
@@ -72,6 +70,21 @@ let compile_program_isa_stack (mode : CompilationMode) (program : SourceProgram)
                         yield Op(Jmp(label_after))
                         yield LabelDef(else_label)
                         yield! compile_block else_block
+                        yield LabelDef(label_after)
+                    | WhileLoop(Constant(ImmValue _), body) ->
+                        // Infinite loop
+                        let loop_label = allocate_label ()
+                        yield LabelDef(loop_label)
+                        yield! compile_block body
+                        yield Op(Jmp(loop_label))
+                    | WhileLoop(cond, body) ->
+                        let loop_label = allocate_label ()
+                        let label_after = allocate_label ()
+                        yield LabelDef(loop_label)
+                        yield! compile_expr cond
+                        yield Op(Jz(label_after))
+                        yield! compile_block body
+                        yield Op(Jmp(loop_label))
                         yield LabelDef(label_after)
             }
             
@@ -100,11 +113,11 @@ let compile_program_isa_stack (mode : CompilationMode) (program : SourceProgram)
                 for operation in current_block.Ops do
                     let instruction_str =
                         match operation with
-                        | Push(ImmValue(value))   -> $"    PUSH #{value}"
+                        | Push(ImmValue(value)) -> $"    PUSH #{value}"
                         | Ld(MemoryLocation(src)) -> $"    LD [{src}]"
                         | St(MemoryLocation(dst)) -> $"    ST [{dst}]"
-                        | Jz(Label(label_name))   -> $"    JZ @{label_name}"
-                        | Jmp(Label(label_name))  -> $"    JMP @{label_name}"
+                        | Jz(Label(label_name)) -> $"    JZ @{label_name}"
+                        | Jmp(Label(label_name)) -> $"    JMP @{label_name}"
                         | Bin(Add) -> "    ADD"
                         | Bin(Sub) -> "    SUB"
                         | Bin(Mul) -> "    MUL"
