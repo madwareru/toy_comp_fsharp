@@ -6,8 +6,8 @@ The project includes:
 - [ ] Specification for a **memory-to-memory** based ISA
 - [ ] Specification for a **stack** based ISA
 - [ ] Specification for a **register** based ISA
-- [ ] Grammar definition for a simple imperative language **L**
-- [ ] Semantics definition for each construct of an **L** language
+- [ ] Grammar definition for a simple imperative language (let's call it **L**)
+- [ ] Semantics definition for each construct of **L**
 - [x] Parser for a **memory-to-memory** based ISA assembly
 - [x] Parser for a **stack** based ISA assembly
 - [x] Parser for a **register** based ISA assembly
@@ -17,7 +17,7 @@ The project includes:
 - [x] Parser for **L**
 - [x] Interpreter of **L**
 - [ ] Compiler from **L** to a **memory-to-memory** based ISA assembly
-- [ ] Compiler from **L** to a **stack** based ISA assembly
+- [x] Compiler from **L** to a **stack** based ISA assembly
 - [ ] Compiler from **L** to a **register** based ISA assembly
 
 ### What this project does not do as precisely as an original toy_comp

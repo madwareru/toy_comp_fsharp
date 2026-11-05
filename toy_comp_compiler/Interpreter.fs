@@ -41,12 +41,12 @@ let interp_program = function
                     | PrintNumber(expr) ->
                         text_buffer <- text_buffer.AppendLine((interp_expr expr).ToString())
                     | Branch(cond, then_block, else_block) ->
-                        if (interp_expr cond) <> 0 then
+                        if interp_expr cond <> 0 then
                             interp_block then_block
                         else
                             interp_block else_block
                     | WhileLoop(cond, body_block) ->
-                        while (interp_expr cond) <> 0 do
+                        while interp_expr cond <> 0 do
                             interp_block body_block
 
         interp_block top_level_block
