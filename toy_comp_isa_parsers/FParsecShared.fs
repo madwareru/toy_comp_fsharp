@@ -8,6 +8,7 @@ let flatten3 ((a, b), c) = a, b, c
 let flatten4 (((a, b), c), d) = a, b, c, d
 
 let private is_ident_char c = Char.IsAsciiLetterOrDigit c || c = '_'
+let private is_ident_start c = Char.IsAsciiLetter c || c = '_'
 let private is_ws_no_new_line_char c = c <> '\n' && Char.IsWhiteSpace c
 
 let ws_no_new_line: Parser<unit, unit> = manySatisfy is_ws_no_new_line_char |>> ignore
@@ -16,7 +17,7 @@ let parse_line_end: Parser<unit, unit> = (pchar '\n' >>% ()) <|> followedBy eof
 let parse_comma: Parser<unit, unit> = ws_no_new_line >>. pchar ',' .>> ws_no_new_line >>% ()
 
 let parse_location_id: Parser<string, unit> =
-    many1Satisfy2 Char.IsAsciiLetter is_ident_char
+    many1Satisfy2 is_ident_start is_ident_char
     <|> many1Satisfy Char.IsAsciiDigit
 
 let parse_addr: Parser<MemoryLocation, unit>  = pchar '[' >>. parse_location_id .>> pchar ']' |>> MemoryLocation
