@@ -3,14 +3,14 @@ This is implementation of a [toy_comp](https://github.com/true-grue/toy_comp) us
 
 ### What's inside
 The project includes:
-- [ ] Specification for a **memory-to-memory** based ISA
+- [x] Specification for a **memory-to-memory** based ISA
 - [ ] Bytecode design for a **memory-to-memory** based ISA
-- [ ] Specification for a **stack** based ISA
+- [x] Specification for a **stack** based ISA
 - [ ] Bytecode design for a **stack** based ISA
-- [ ] Specification for a **register** based ISA
+- [x] Specification for a **register** based ISA
 - [ ] Bytecode design for a **register** based ISA
-- [ ] Grammar definition for a simple imperative language (let's call it **L**)
-- [ ] Semantics definition for each construct of **L**
+- [x] Grammar definition for a simple imperative language (let's call it **L**)
+- [x] Semantics definition for each construct of **L**
 - [x] Parser for a **memory-to-memory** based ISA assembly
 - [x] Parser for a **stack** based ISA assembly
 - [x] Parser for a **register** based ISA assembly
