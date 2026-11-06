@@ -16,7 +16,7 @@ let interp_isa_stack_program = function
         let mutable text_buffer = StringBuilder()
         
         let mem_set key value = memory <- memory |> Map.add key value
-        let mem_get key = memory[key]
+        let mem_get key = memory |> Map.tryFind key |> Option.defaultWith (fun () -> 0L)
         
         let stack_push value = stack <- value :: stack
         let stack_pop () =
