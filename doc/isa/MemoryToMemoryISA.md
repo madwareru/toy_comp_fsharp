@@ -83,14 +83,15 @@ Complete table of operations are follows:
 | OUT  | NoOp  | Mem  | NoOp | `OUT [13]`           | Put ASCII character for a `lhs` in a text buffer                  |
 | OUTN | NoOp  | Mem  | NoOp | `OUTN [13]`          | Print a decimal int for `lhs` followed by '\n' into a text buffer | 
 
-All operations with an exception to LI operates on memory locations, which is a main meaning of this architecture. 
+All operations with an exception to **LI** operates on memory locations, which is a main meaning of this architecture. 
+
 When there is attempt to read from a memory location which were never written to earlier, it means a default value of
 0 must be used.
 
-### Label in the code
+### Labels in the code
 There are also special label instructions in the code which looks like a label followed by `:` and a new line,
 these instructions are surved exactly one purpose, which is to mark position in the code where it would be possible to 
-jump using `JZ` or `JMP` mnemonics.
+jump using `JZ` or `JMP`.
 
 ### Simple example of an assembly code
 Here is a simple program calculating a factorial of 5
