@@ -91,7 +91,7 @@ to support constant folding in cases such as `0 - 9` in the Mandelbrot example.
 
 ### Future plans
 There are some interesting extra work that could be made with this project:
-- [ ] Semantic code analyzer to detect an access to undefined variables
+- [x] Semantic code analyzer to detect an access to undefined variables
 - [ ] Bytecode design for a **memory-to-memory**-based ISA
 - [ ] Bytecode design for a **stack**-based ISA
 - [ ] Bytecode design for a **register**-based ISA

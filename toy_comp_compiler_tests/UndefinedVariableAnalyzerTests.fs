@@ -4,8 +4,14 @@ open NUnit.Framework
 open toy_comp_core.ISAShared
 open toy_comp_core.AST
 open toy_comp_compiler.UndefinedVariableAnalyzer
+open toy_comp_compiler.Interpreter
+open toy_comp_compiler.CompilerShared
+open toy_comp_compiler.ISAMemCompiler
+open toy_comp_compiler.ISARegCompiler
+open toy_comp_compiler.ISAStackCompiler
 
 let private x = MemoryLocation "x"
+let private invalidProgram = Program(Block [ PrintNumber(Variable x) ])
 
 let private assert_undefined (MemoryLocation name) program =
     let ex = Assert.Catch(fun () -> analyze_program program |> ignore)
@@ -87,3 +93,22 @@ let ``nested blocks use definitions guaranteed on entry`` () =
         Program(Block [ Assignment(x, Constant(ImmValue 0L)); WhileLoop(Variable x, body); PrintNumber(Variable x) ])
 
     analyze_program valid
+
+[<Test>]
+let ``interpreter rejects undefined variables`` () =
+    let ex = Assert.Catch(fun () -> interp_program invalidProgram |> ignore)
+    Assert.AreEqual("Undefined variable: x", ex.Message)
+
+[<Test>]
+let ``all compiler modes reject undefined variables`` () =
+    let compilations : (unit -> unit) list =
+        [ fun () -> compile_program_isa_mem CompilationMode.ISA invalidProgram |> ignore
+          fun () -> compile_program_isa_mem CompilationMode.Text invalidProgram |> ignore
+          fun () -> compile_program_isa_reg CompilationMode.ISA invalidProgram |> ignore
+          fun () -> compile_program_isa_reg CompilationMode.Text invalidProgram |> ignore
+          fun () -> compile_program_isa_stack CompilationMode.ISA invalidProgram |> ignore
+          fun () -> compile_program_isa_stack CompilationMode.Text invalidProgram |> ignore ]
+
+    for compile in compilations do
+        let ex = Assert.Catch(fun () -> compile ())
+        Assert.AreEqual("Undefined variable: x", ex.Message)
