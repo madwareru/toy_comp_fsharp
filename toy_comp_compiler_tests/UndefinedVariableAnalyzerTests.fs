@@ -180,16 +180,17 @@ let ``unknown branches keep only matching known values`` () =
                   Branch(condition, Block [], Block [ PrintNumber(Variable missing) ]) ]
         )
 
-    let conflicting =
+    let conflictingAt value =
         Program(
             Block
                 [ define_unknown flag
                   Branch(Variable flag, Block [ assignX 1L ], Block [ assignX 2L ])
-                  Branch(condition, Block [], Block [ PrintNumber(Variable missing) ]) ]
+                  Branch(Binary(Eq, Variable x, Constant(ImmValue value)), Block [], Block [ PrintNumber(Variable missing) ]) ]
         )
 
     analyze_for_unassigned_variables selected |> ignore
-    assert_undefined missing conflicting
+    assert_undefined missing (conflictingAt 1L)
+    assert_undefined missing (conflictingAt 2L)
 
 [<Test>]
 let ``unknown left operand does not hide an undefined right operand`` () =
@@ -251,13 +252,13 @@ let ``loops invalidate nested assignments and preserve untouched values`` () =
     let nestedAssignment =
         Branch(Constant(ImmValue 1L), Block [ Assignment(x, Constant(ImmValue 3L)) ], Block [])
 
-    let invalidated =
+    let invalidatedAt value =
         Program(
             Block
                 [ define_unknown flag
                   Assignment(x, Constant(ImmValue 1L))
                   WhileLoop(Variable flag, Block [ nestedAssignment ])
-                  Branch(Binary(Eq, Variable x, Constant(ImmValue 3L)), Block [], Block [ PrintNumber(Variable missing) ]) ]
+                  Branch(Binary(Eq, Variable x, Constant(ImmValue value)), Block [], Block [ PrintNumber(Variable missing) ]) ]
         )
 
     let untouched =
@@ -269,7 +270,8 @@ let ``loops invalidate nested assignments and preserve untouched values`` () =
                   Branch(Binary(Eq, Variable y, Constant(ImmValue 2L)), Block [], Block [ PrintNumber(Variable missing) ]) ]
         )
 
-    assert_undefined missing invalidated
+    assert_undefined missing (invalidatedAt 1L)
+    assert_undefined missing (invalidatedAt 3L)
     analyze_for_unassigned_variables untouched |> ignore
 
 [<Test>]
@@ -278,12 +280,13 @@ let ``loop analysis does not assume exactly one iteration`` () =
     let condition = Binary(Lt, Variable i, Constant(ImmValue 2L))
     let body = Block [ Assignment(i, Binary(Add, Variable i, Constant(ImmValue 1L))) ]
 
-    let program =
+    let programAt value =
         Program(
             Block
                 [ Assignment(i, Constant(ImmValue 0L))
                   WhileLoop(condition, body)
-                  Branch(Binary(Eq, Variable i, Constant(ImmValue 1L)), Block [], Block [ PrintNumber(Variable x) ]) ]
+                  Branch(Binary(Eq, Variable i, Constant(ImmValue value)), Block [], Block [ PrintNumber(Variable x) ]) ]
         )
 
-    assert_undefined x program
+    assert_undefined x (programAt 0L)
+    assert_undefined x (programAt 1L)
