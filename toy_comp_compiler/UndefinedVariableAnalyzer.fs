@@ -78,14 +78,15 @@ let analyze_for_unassigned_variables (Program root_block) : Program =
                         let then_state = check_block state then_block
                         let else_state = check_block state else_block
                         merge_branches then_state else_state
-                | WhileLoop(Constant(ImmValue 0L), _) -> state
-                | WhileLoop(Constant(ImmValue _), body) ->
-                    check_block state body
-                    |> invalidate (assigned_locations body)
                 | WhileLoop(cond, body) ->
-                    eval_expr state cond |> ignore
-                    check_block state body |> ignore
-                    invalidate (assigned_locations body) state
+                    match eval_expr state cond with
+                    | Known 0L -> state
+                    | Known _ ->
+                        check_block state body
+                        |> invalidate (assigned_locations body)
+                    | Unknown ->
+                        check_block state body |> ignore
+                        invalidate (assigned_locations body) state
         state
 
     check_block Map.empty root_block |> ignore

@@ -203,3 +203,87 @@ let ``unknown left operand does not hide an undefined right operand`` () =
         )
 
     assert_undefined x program
+
+[<Test>]
+let ``computed zero loop condition skips body and preserves entry values`` () =
+    let y = MemoryLocation "y"
+    let loopCondition = Binary(Eq, Variable x, Constant(ImmValue 1L))
+    let afterCondition = Binary(Eq, Variable x, Constant(ImmValue 0L))
+
+    let program =
+        Program(
+            Block
+                [ Assignment(x, Constant(ImmValue 0L))
+                  WhileLoop(loopCondition, Block [ PrintNumber(Variable y) ])
+                  Branch(afterCondition, Block [], Block [ PrintNumber(Variable y) ]) ]
+        )
+
+    analyze_for_unassigned_variables program |> ignore
+
+[<Test>]
+let ``computed nonzero loop exports definitions but not assigned constants`` () =
+    let missing = MemoryLocation "missing"
+    let loopCondition = Binary(Lt, Constant(ImmValue 0L), Constant(ImmValue 1L))
+
+    let defined =
+        Program(
+            Block
+                [ WhileLoop(loopCondition, Block [ Assignment(x, Constant(ImmValue 1L)) ])
+                  PrintNumber(Variable x) ]
+        )
+
+    let unknown =
+        Program(
+            Block
+                [ WhileLoop(loopCondition, Block [ Assignment(x, Constant(ImmValue 1L)) ])
+                  Branch(Binary(Eq, Variable x, Constant(ImmValue 1L)), Block [], Block [ PrintNumber(Variable missing) ]) ]
+        )
+
+    analyze_for_unassigned_variables defined |> ignore
+    assert_undefined missing unknown
+
+[<Test>]
+let ``loops invalidate nested assignments and preserve untouched values`` () =
+    let flag = MemoryLocation "flag"
+    let y = MemoryLocation "y"
+    let missing = MemoryLocation "missing"
+
+    let nestedAssignment =
+        Branch(Constant(ImmValue 1L), Block [ Assignment(x, Constant(ImmValue 3L)) ], Block [])
+
+    let invalidated =
+        Program(
+            Block
+                [ define_unknown flag
+                  Assignment(x, Constant(ImmValue 1L))
+                  WhileLoop(Variable flag, Block [ nestedAssignment ])
+                  Branch(Binary(Eq, Variable x, Constant(ImmValue 3L)), Block [], Block [ PrintNumber(Variable missing) ]) ]
+        )
+
+    let untouched =
+        Program(
+            Block
+                [ define_unknown flag
+                  Assignment(y, Constant(ImmValue 2L))
+                  WhileLoop(Variable flag, Block [ Assignment(x, Constant(ImmValue 3L)) ])
+                  Branch(Binary(Eq, Variable y, Constant(ImmValue 2L)), Block [], Block [ PrintNumber(Variable missing) ]) ]
+        )
+
+    assert_undefined missing invalidated
+    analyze_for_unassigned_variables untouched |> ignore
+
+[<Test>]
+let ``loop analysis does not assume exactly one iteration`` () =
+    let i = MemoryLocation "i"
+    let condition = Binary(Lt, Variable i, Constant(ImmValue 2L))
+    let body = Block [ Assignment(i, Binary(Add, Variable i, Constant(ImmValue 1L))) ]
+
+    let program =
+        Program(
+            Block
+                [ Assignment(i, Constant(ImmValue 0L))
+                  WhileLoop(condition, body)
+                  Branch(Binary(Eq, Variable i, Constant(ImmValue 1L)), Block [], Block [ PrintNumber(Variable x) ]) ]
+        )
+
+    assert_undefined x program
