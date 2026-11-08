@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <Compile Include="ParserTests.fs" />
+        <Compile Include="UndefinedVariableAnalyzerTests.fs" />
         <Compile Include="InterpreterTests.fs" />
         <Compile Include="ISAStackCompilerTests.fs" />
         <Compile Include="ISARegCompilerTests.fs" />

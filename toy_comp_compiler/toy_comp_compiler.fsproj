@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Compile Include="Parser.fs" />
+    <Compile Include="UndefinedVariableAnalyzer.fs" />
     <Compile Include="Interpreter.fs" />
     <Compile Include="CompilerShared.fs" />
     <Compile Include="ISAStackCompiler.fs" />
