@@ -6,41 +6,39 @@ open toy_comp_core.ResourceUtility
 open toy_comp_core.ISAStack
 open toy_comp_isa_parsers.ISAStackParser
 
-let factorialAssembly = SampleAsm.Fact |> read_sample_asm ISAKind.Stack
-
-let factorialProgram =
-    Program(
-        Map
-            [ ProgramStartLabel,
-              { Ops =
-                  [ Push(ImmValue 5)
-                    St(MemoryLocation "n")
-                    Push(ImmValue 1)
-                    St(MemoryLocation "r") ]
-                NextBlockLabel = Label "4" }
-              Label "4",
-              { Ops =
-                  [ Push(ImmValue 1)
-                    Ld(MemoryLocation "n")
-                    Bin BinOp.Lt
-                    Jz(Label "18")
-                    Ld(MemoryLocation "r")
-                    Ld(MemoryLocation "n")
-                    Bin BinOp.Mul
-                    St(MemoryLocation "r")
-                    Ld(MemoryLocation "n")
-                    Push(ImmValue 1)
-                    Bin BinOp.Sub
-                    St(MemoryLocation "n")
-                    Jmp(Label "4") ]
-                NextBlockLabel = Label "18" }
-              Label "18",
-              { Ops = [ Ld(MemoryLocation "r"); OutN ]
-                NextBlockLabel = ProgramEndLabel } ]
-    )
-
 [<Test>]
 let testIfFactorialAssemblyParses () =
+    let factorialProgram =
+        Program(
+            Map
+                [ ProgramStartLabel,
+                  { Ops =
+                      [ Push(ImmValue 5)
+                        St(MemoryLocation "n")
+                        Push(ImmValue 1)
+                        St(MemoryLocation "r") ]
+                    NextBlockLabel = Label "4" }
+                  Label "4",
+                  { Ops =
+                      [ Push(ImmValue 1)
+                        Ld(MemoryLocation "n")
+                        Bin BinOp.Lt
+                        Jz(Label "18")
+                        Ld(MemoryLocation "r")
+                        Ld(MemoryLocation "n")
+                        Bin BinOp.Mul
+                        St(MemoryLocation "r")
+                        Ld(MemoryLocation "n")
+                        Push(ImmValue 1)
+                        Bin BinOp.Sub
+                        St(MemoryLocation "n")
+                        Jmp(Label "4") ]
+                    NextBlockLabel = Label "18" }
+                  Label "18",
+                  { Ops = [ Ld(MemoryLocation "r"); OutN ]
+                    NextBlockLabel = ProgramEndLabel } ]
+        )
+    let factorialAssembly = SampleAsm.Fact |> read_sample_asm ISAKind.Stack
     Assert.AreEqual(factorialProgram, factorialAssembly |> parse_isa_stack)
 
 [<Test>]
