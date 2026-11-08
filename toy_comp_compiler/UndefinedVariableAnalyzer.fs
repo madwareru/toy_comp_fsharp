@@ -27,8 +27,15 @@ let rec private check_block defined (Block statements) =
             | PrintNumber expr ->
                 check_expr defined expr
                 defined
-            | Branch _
-            | WhileLoop _ -> failwith "Task 2"
+            | Branch(cond, thenBlock, elseBlock) ->
+                check_expr defined cond
+                let thenDefined = check_block defined thenBlock
+                let elseDefined = check_block defined elseBlock
+                Set.intersect thenDefined elseDefined
+            | WhileLoop(cond, body) ->
+                check_expr defined cond
+                check_block defined body |> ignore
+                defined
 
         check_block next_defined (Block rest)
 
