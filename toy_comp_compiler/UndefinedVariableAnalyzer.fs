@@ -5,26 +5,32 @@ open toy_comp_core.AST
 
 let rec private check_expr defined expr =
     match expr with
-    | Constant _ -> Ok()
-    | Variable location when Set.contains location defined -> Ok()
-    | Variable location -> Error location
+    | Constant _ -> ()
+    | Variable location ->
+        if not (Set.contains location defined) then
+            let (MemoryLocation name) = location
+            failwith $"Undefined variable: {name}"
     | Binary(_, lhs, rhs) ->
-        check_expr defined lhs |> Result.bind (fun () -> check_expr defined rhs)
+        check_expr defined lhs
+        check_expr defined rhs
 
 let rec private check_block defined (Block statements) =
     match statements with
-    | [] -> Ok defined
+    | [] -> defined
     | statement :: rest ->
-        let result =
+        let next_defined =
             match statement with
             | Assignment(dst, expr) ->
-                check_expr defined expr |> Result.map (fun () -> Set.add dst defined)
+                check_expr defined expr
+                Set.add dst defined
             | PutChar expr
-            | PrintNumber expr -> check_expr defined expr |> Result.map (fun () -> defined)
+            | PrintNumber expr ->
+                check_expr defined expr
+                defined
             | Branch _
             | WhileLoop _ -> failwith "Task 2"
 
-        result |> Result.bind (fun next_defined -> check_block next_defined (Block rest))
+        check_block next_defined (Block rest)
 
-let analyze_program (Program rootBlock) : Result<unit, MemoryLocation> =
-    check_block Set.empty rootBlock |> Result.map ignore
+let analyze_program (Program rootBlock) : unit =
+    check_block Set.empty rootBlock |> ignore
