@@ -50,6 +50,7 @@ let testIfAllSampleProgramsCompilesToTextCorrectly () =
             sample
             |> read_sample_program
             |> parse_program
+            |> analyze_for_unassigned_variables
             |> fold_consts_in_program
             |> compile_program_isa_stack CompilationMode.Text
 
