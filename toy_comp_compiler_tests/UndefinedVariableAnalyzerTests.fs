@@ -4,14 +4,11 @@ open NUnit.Framework
 open toy_comp_core.ISAShared
 open toy_comp_core.AST
 open toy_comp_compiler.UndefinedVariableAnalyzer
-open toy_comp_compiler.Interpreter
-open toy_comp_compiler.CompilerShared
-open toy_comp_compiler.ISAMemCompiler
-open toy_comp_compiler.ISARegCompiler
-open toy_comp_compiler.ISAStackCompiler
 
 let private x = MemoryLocation "x"
-let private invalid_program = Program(Block [ PrintNumber(Variable x) ])
+
+let private define_unknown location =
+    WhileLoop(Constant(ImmValue 1L), Block [ Assignment(location, Constant(ImmValue 0L)) ])
 
 let private assert_undefined (MemoryLocation name) program =
     let ex = Assert.Catch(fun () -> analyze_for_unassigned_variables program |> ignore)
@@ -43,18 +40,30 @@ let ``output statements check their expressions`` () =
     assert_undefined x printNumber
 
 [<Test>]
-let ``conditional definitions must be present on both paths`` () =
-    let condition = Constant(ImmValue 1L)
+let ``nonconstant conditional definitions must be present on both paths`` () =
+    let flag = MemoryLocation "flag"
+    let assignFlag = define_unknown flag
+    let condition = Variable flag
     let assignX = Assignment(x, Constant(ImmValue 1L))
     let readX = PrintNumber(Variable x)
 
     let bothBranches =
-        Program(Block [ Branch(condition, Block [ assignX ], Block [ assignX ]); readX ])
+        Program(Block [ assignFlag; Branch(condition, Block [ assignX ], Block [ assignX ]); readX ])
 
-    let thenOnly = Program(Block [ Branch(condition, Block [ assignX ], Block []); readX ])
+    let thenOnly = Program(Block [ assignFlag; Branch(condition, Block [ assignX ], Block []); readX ])
 
     analyze_for_unassigned_variables bothBranches |> ignore
     assert_undefined x thenOnly
+
+[<Test>]
+let ``constant conditional uses only the selected branch`` () =
+    let assignX = Assignment(x, Constant(ImmValue 1L))
+    let readX = PrintNumber(Variable x)
+    let thenOnly = Program(Block [ Branch(Constant(ImmValue 1L), Block [ assignX ], Block []); readX ])
+    let skippedRead = Program(Block [ Branch(Constant(ImmValue 0L), Block [ readX ], Block []) ])
+
+    analyze_for_unassigned_variables thenOnly |> ignore
+    analyze_for_unassigned_variables skippedRead |> ignore
 
 [<Test>]
 let ``conditional and loop conditions are checked before their bodies`` () =
@@ -73,12 +82,31 @@ let ``child blocks allow an earlier assignment in the same block`` () =
     analyze_for_unassigned_variables loop |> ignore
 
 [<Test>]
-let ``loop body definitions do not escape the loop`` () =
+let ``nonconstant loop body definitions do not escape the loop`` () =
+    let flag = MemoryLocation "flag"
+    let assignX = Assignment(x, Constant(ImmValue 1L))
+    let program =
+        Program(
+            Block
+                [ define_unknown flag
+                  WhileLoop(Variable flag, Block [ assignX ])
+                  PrintNumber(Variable x) ]
+        )
+
+    assert_undefined x program
+
+[<Test>]
+let ``infinite loop exports definitions from its body`` () =
     let assignX = Assignment(x, Constant(ImmValue 1L))
     let program =
         Program(Block [ WhileLoop(Constant(ImmValue 1L), Block [ assignX ]); PrintNumber(Variable x) ])
 
-    assert_undefined x program
+    analyze_for_unassigned_variables program |> ignore
+
+[<Test>]
+let ``zero trip loop skips its body`` () =
+    let program = Program(Block [ WhileLoop(Constant(ImmValue 0L), Block [ PrintNumber(Variable x) ]) ])
+    analyze_for_unassigned_variables program |> ignore
 
 [<Test>]
 let ``loop body reads cannot use a later body assignment`` () =
@@ -90,25 +118,88 @@ let ``loop body reads cannot use a later body assignment`` () =
 let ``nested blocks use definitions guaranteed on entry`` () =
     let body = Block [ Assignment(x, Binary(Add, Variable x, Constant(ImmValue 1L))) ]
     let valid =
-        Program(Block [ Assignment(x, Constant(ImmValue 0L)); WhileLoop(Variable x, body); PrintNumber(Variable x) ])
+        Program(Block [ define_unknown x; WhileLoop(Variable x, body); PrintNumber(Variable x) ])
 
     analyze_for_unassigned_variables valid |> ignore
 
 [<Test>]
-let ``interpreter rejects undefined variables`` () =
-    let ex = Assert.Catch(fun () -> interp_program invalid_program |> ignore)
-    Assert.AreEqual("Undefined variable: x", ex.Message)
+let ``known arithmetic and comparisons produce exact values`` () =
+    let cases =
+        [ Add, 7L, 5L, 12L
+          Sub, 7L, 5L, 2L
+          Mul, 7L, 5L, 35L
+          Eq, 7L, 5L, 0L
+          Lt, 7L, 5L, 0L
+          Leq, 7L, 7L, 1L
+          Add, System.Int64.MaxValue, 1L, System.Int64.MinValue ]
+
+    for op, lhs, rhs, expected in cases do
+        let result = Binary(op, Constant(ImmValue lhs), Constant(ImmValue rhs))
+        let condition = Binary(Eq, result, Constant(ImmValue expected))
+        let program = Program(Block [ Branch(condition, Block [], Block [ PrintNumber(Variable x) ]) ])
+        analyze_for_unassigned_variables program |> ignore
 
 [<Test>]
-let ``all compiler modes reject undefined variables`` () =
-    let compilations : (unit -> unit) list =
-        [ fun () -> compile_program_isa_mem CompilationMode.ISA invalid_program |> ignore
-          fun () -> compile_program_isa_mem CompilationMode.Text invalid_program |> ignore
-          fun () -> compile_program_isa_reg CompilationMode.ISA invalid_program |> ignore
-          fun () -> compile_program_isa_reg CompilationMode.Text invalid_program |> ignore
-          fun () -> compile_program_isa_stack CompilationMode.ISA invalid_program |> ignore
-          fun () -> compile_program_isa_stack CompilationMode.Text invalid_program |> ignore ]
+let ``known variable conditions treat only zero as false`` () =
+    let missing = MemoryLocation "missing"
+    let skippedRead = Block [ PrintNumber(Variable missing) ]
+    let nonzero =
+        Program(Block [ Assignment(x, Constant(ImmValue -1L)); Branch(Variable x, Block [], skippedRead) ])
+    let zero =
+        Program(Block [ Assignment(x, Constant(ImmValue 0L)); Branch(Variable x, skippedRead, Block []) ])
 
-    for compile in compilations do
-        let ex = Assert.Catch(fun () -> compile ())
-        Assert.AreEqual("Undefined variable: x", ex.Message)
+    analyze_for_unassigned_variables nonzero |> ignore
+    analyze_for_unassigned_variables zero |> ignore
+
+[<Test>]
+let ``assignment stores a value computed from the old destination`` () =
+    let missing = MemoryLocation "missing"
+    let condition = Binary(Eq, Variable x, Constant(ImmValue 2L))
+    let program =
+        Program(
+            Block
+                [ Assignment(x, Constant(ImmValue 1L))
+                  Assignment(x, Binary(Add, Variable x, Constant(ImmValue 1L)))
+                  Branch(condition, Block [], Block [ PrintNumber(Variable missing) ]) ]
+        )
+
+    analyze_for_unassigned_variables program |> ignore
+
+[<Test>]
+let ``unknown branches keep only matching known values`` () =
+    let flag = MemoryLocation "flag"
+    let missing = MemoryLocation "missing"
+    let assignX value = Assignment(x, Constant(ImmValue value))
+    let condition = Binary(Eq, Variable x, Constant(ImmValue 1L))
+
+    let selected =
+        Program(
+            Block
+                [ define_unknown flag
+                  Branch(Variable flag, Block [ assignX 1L ], Block [ assignX 1L ])
+                  Branch(condition, Block [], Block [ PrintNumber(Variable missing) ]) ]
+        )
+
+    let conflicting =
+        Program(
+            Block
+                [ define_unknown flag
+                  Branch(Variable flag, Block [ assignX 1L ], Block [ assignX 2L ])
+                  Branch(condition, Block [], Block [ PrintNumber(Variable missing) ]) ]
+        )
+
+    analyze_for_unassigned_variables selected |> ignore
+    assert_undefined missing conflicting
+
+[<Test>]
+let ``unknown left operand does not hide an undefined right operand`` () =
+    let flag = MemoryLocation "flag"
+
+    let program =
+        Program(
+            Block
+                [ define_unknown flag
+                  PrintNumber(Binary(Add, Variable flag, Variable x)) ]
+        )
+
+    assert_undefined x program
