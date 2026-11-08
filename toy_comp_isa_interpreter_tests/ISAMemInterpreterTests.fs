@@ -7,14 +7,16 @@ open toy_comp_isa_interpreters.ISAMemInterpreter
 
 [<Test>]
 let testIfAllSampleAssemblyParsesAndInterpretsAsExpected () =
-    for sample in [
-        SampleAsm.Fib
-        SampleAsm.Fact
-        SampleAsm.Primes
-        SampleAsm.Sierpinski
-        SampleAsm.Carpet
-        SampleAsm.Mandelbrot
-    ] do
+    for sample in
+        [ SampleAsm.Fib
+          SampleAsm.Fact
+          SampleAsm.Primes
+          SampleAsm.Sierpinski
+          SampleAsm.Carpet
+          SampleAsm.Mandelbrot ] do
         let expected_out = sample |> read_expected_out
-        let result = sample |> read_sample_asm ISAKind.Mem |> parse_isa_mem |> interp_isa_mem_program
+
+        let result =
+            sample |> read_sample_asm ISAKind.Mem |> parse_isa_mem |> interp_isa_mem_program
+
         Assert.AreEqual(expected_out, result)

@@ -9,9 +9,17 @@ let private read_resource_as_text res_name =
     use stream = assembly.GetManifestResourceStream(res_name)
     use reader = new StreamReader(stream)
     reader.ReadToEnd()
-    
-type SampleAsm = Fact | Fib | Sierpinski | Carpet | Mandelbrot | Primes
-let private get_file_name = function
+
+type SampleAsm =
+    | Fact
+    | Fib
+    | Sierpinski
+    | Carpet
+    | Mandelbrot
+    | Primes
+
+let private get_file_name =
+    function
     | Fact -> "fact"
     | Fib -> "fib"
     | Sierpinski -> "sierpinski"
@@ -19,22 +27,27 @@ let private get_file_name = function
     | Mandelbrot -> "mandelbrot"
     | Primes -> "primes"
 
-type ISAKind = Mem | Stack | Reg
+type ISAKind =
+    | Mem
+    | Stack
+    | Reg
 
 let read_sample_asm isa_kind sample =
     let name_str = sample |> get_file_name
+
     let res_name =
         match isa_kind with
         | Mem -> $"Asm.{name_str}.asmm"
         | Stack -> $"Asm.{name_str}.asms"
         | Reg -> $"Asm.{name_str}.asmr"
+
     res_name |> read_resource_as_text
-    
+
 let read_sample_program sample =
     let name_str = sample |> get_file_name
     let res_name = $"Programs.{name_str}.mrb"
     res_name |> read_resource_as_text
-    
+
 let read_expected_out sample =
     let name_str = sample |> get_file_name
     let res_name = $"ExpectedOuts.{name_str}.txt"

@@ -11,44 +11,46 @@ open toy_comp_isa_interpreters.ISAStackInterpreter
 
 [<Test>]
 let testIfAllSampleProgramsCompilesAndInterpretsAsExpected () =
-    for sample in [
-        SampleAsm.Fib
-        SampleAsm.Fact
-        SampleAsm.Primes
-        SampleAsm.Sierpinski
-        SampleAsm.Carpet
-        SampleAsm.Mandelbrot
-    ] do
+    for sample in
+        [ SampleAsm.Fib
+          SampleAsm.Fact
+          SampleAsm.Primes
+          SampleAsm.Sierpinski
+          SampleAsm.Carpet
+          SampleAsm.Mandelbrot ] do
         let expected_out = sample |> read_expected_out
+
         let isa =
             sample
             |> read_sample_program
             |> parse_program
             |> fold_consts_in_program
             |> compile_program_isa_stack CompilationMode.ISA
+
         match isa with
         | CompiledISA isa ->
             let result = isa |> interp_isa_stack_program
             Assert.AreEqual(expected_out, result)
         | _ -> failwith "unreacheable"
-        
+
 [<Test>]
 let testIfAllSampleProgramsCompilesToTextCorrectly () =
-    for sample in [
-        SampleAsm.Fib
-        SampleAsm.Fact
-        SampleAsm.Primes
-        SampleAsm.Sierpinski
-        SampleAsm.Carpet
-        SampleAsm.Mandelbrot
-    ] do
+    for sample in
+        [ SampleAsm.Fib
+          SampleAsm.Fact
+          SampleAsm.Primes
+          SampleAsm.Sierpinski
+          SampleAsm.Carpet
+          SampleAsm.Mandelbrot ] do
         let expected_out = sample |> read_expected_out
+
         let isa =
             sample
             |> read_sample_program
             |> parse_program
             |> fold_consts_in_program
             |> compile_program_isa_stack CompilationMode.Text
+
         match isa with
         | CompiledText text ->
             let result = text |> parse_isa_stack |> interp_isa_stack_program
