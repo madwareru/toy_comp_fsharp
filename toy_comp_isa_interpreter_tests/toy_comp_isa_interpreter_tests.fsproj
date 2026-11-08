@@ -14,7 +14,6 @@
         <Compile Include="ISAMemInterpreterTests.fs" />
         <Compile Include="ISAStackInterpreterTests.fs" />
         <Compile Include="ISARegInterpreterTests.fs" />
-        <Compile Include="Program.fs" />
     </ItemGroup>
 
     <ItemGroup>

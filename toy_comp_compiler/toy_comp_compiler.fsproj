@@ -18,7 +18,6 @@
     <Compile Include="ISARegCompiler.fs" />
     <Compile Include="ISAMemCompiler.fs" />
     <Compile Include="ConstantFolding.fs" />
-    <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
