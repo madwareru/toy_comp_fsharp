@@ -15,8 +15,6 @@ type private SourceProgram = toy_comp_core.AST.Program
 type private TargetProgram = toy_comp_core.ISAStack.Program
 
 let compile_program_isa_stack (mode: CompilationMode) (program: SourceProgram) : TargetProgram CompilationResult =
-    analyze_program program
-
     match program with
     | toy_comp_core.AST.Program(root_block) ->
         let mutable next_label_id = 0

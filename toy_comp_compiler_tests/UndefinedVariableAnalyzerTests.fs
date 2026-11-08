@@ -11,10 +11,10 @@ open toy_comp_compiler.ISARegCompiler
 open toy_comp_compiler.ISAStackCompiler
 
 let private x = MemoryLocation "x"
-let private invalidProgram = Program(Block [ PrintNumber(Variable x) ])
+let private invalid_program = Program(Block [ PrintNumber(Variable x) ])
 
 let private assert_undefined (MemoryLocation name) program =
-    let ex = Assert.Catch(fun () -> analyze_program program |> ignore)
+    let ex = Assert.Catch(fun () -> analyze_for_unassigned_variables program |> ignore)
     Assert.AreEqual($"Undefined variable: {name}", ex.Message)
 
 [<Test>]
@@ -25,7 +25,7 @@ let ``assignment defines its destination only after checking rhs`` () =
     let invalid =
         Program(Block [ Assignment(x, Binary(Add, Variable x, Constant(ImmValue 1L))) ])
 
-    analyze_program valid |> ignore
+    analyze_for_unassigned_variables valid |> ignore
     assert_undefined x invalid
 
 [<Test>]
@@ -53,7 +53,7 @@ let ``conditional definitions must be present on both paths`` () =
 
     let thenOnly = Program(Block [ Branch(condition, Block [ assignX ], Block []); readX ])
 
-    analyze_program bothBranches
+    analyze_for_unassigned_variables bothBranches |> ignore
     assert_undefined x thenOnly
 
 [<Test>]
@@ -69,8 +69,8 @@ let ``child blocks allow an earlier assignment in the same block`` () =
     let readX = PrintNumber(Variable x)
     let branch = Program(Block [ Branch(Constant(ImmValue 1L), Block [ assignX; readX ], Block []) ])
     let loop = Program(Block [ WhileLoop(Constant(ImmValue 1L), Block [ assignX; readX ]) ])
-    analyze_program branch
-    analyze_program loop
+    analyze_for_unassigned_variables branch |> ignore
+    analyze_for_unassigned_variables loop |> ignore
 
 [<Test>]
 let ``loop body definitions do not escape the loop`` () =
@@ -92,22 +92,22 @@ let ``nested blocks use definitions guaranteed on entry`` () =
     let valid =
         Program(Block [ Assignment(x, Constant(ImmValue 0L)); WhileLoop(Variable x, body); PrintNumber(Variable x) ])
 
-    analyze_program valid
+    analyze_for_unassigned_variables valid |> ignore
 
 [<Test>]
 let ``interpreter rejects undefined variables`` () =
-    let ex = Assert.Catch(fun () -> interp_program invalidProgram |> ignore)
+    let ex = Assert.Catch(fun () -> interp_program invalid_program |> ignore)
     Assert.AreEqual("Undefined variable: x", ex.Message)
 
 [<Test>]
 let ``all compiler modes reject undefined variables`` () =
     let compilations : (unit -> unit) list =
-        [ fun () -> compile_program_isa_mem CompilationMode.ISA invalidProgram |> ignore
-          fun () -> compile_program_isa_mem CompilationMode.Text invalidProgram |> ignore
-          fun () -> compile_program_isa_reg CompilationMode.ISA invalidProgram |> ignore
-          fun () -> compile_program_isa_reg CompilationMode.Text invalidProgram |> ignore
-          fun () -> compile_program_isa_stack CompilationMode.ISA invalidProgram |> ignore
-          fun () -> compile_program_isa_stack CompilationMode.Text invalidProgram |> ignore ]
+        [ fun () -> compile_program_isa_mem CompilationMode.ISA invalid_program |> ignore
+          fun () -> compile_program_isa_mem CompilationMode.Text invalid_program |> ignore
+          fun () -> compile_program_isa_reg CompilationMode.ISA invalid_program |> ignore
+          fun () -> compile_program_isa_reg CompilationMode.Text invalid_program |> ignore
+          fun () -> compile_program_isa_stack CompilationMode.ISA invalid_program |> ignore
+          fun () -> compile_program_isa_stack CompilationMode.Text invalid_program |> ignore ]
 
     for compile in compilations do
         let ex = Assert.Catch(fun () -> compile ())

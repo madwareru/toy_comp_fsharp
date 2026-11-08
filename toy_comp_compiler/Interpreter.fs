@@ -3,11 +3,8 @@ module toy_comp_compiler.Interpreter
 open System.Text
 open toy_comp_core.ISAShared
 open toy_comp_core.AST
-open toy_comp_compiler.UndefinedVariableAnalyzer
 
 let interp_program (program: Program) =
-    analyze_program program
-
     match program with
     | Program top_level_block ->
         let mutable memory = Map.empty

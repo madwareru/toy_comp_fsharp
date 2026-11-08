@@ -5,7 +5,6 @@ open toy_comp_core.ISAShared
 open toy_comp_core.AST
 open toy_comp_core.ISAMem
 open toy_comp_compiler.CompilerShared
-open toy_comp_compiler.UndefinedVariableAnalyzer
 
 type private Instruction =
     | Op of Operation
@@ -15,7 +14,6 @@ type private SourceProgram = toy_comp_core.AST.Program
 type private TargetProgram = toy_comp_core.ISAMem.Program
 
 let compile_program_isa_mem (mode: CompilationMode) (program: SourceProgram) : TargetProgram CompilationResult =
-    analyze_program program
 
     match program with
     | toy_comp_core.AST.Program(root_block) ->

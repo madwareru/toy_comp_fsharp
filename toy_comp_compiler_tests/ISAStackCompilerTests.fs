@@ -2,6 +2,7 @@ module toy_comp_compiler_tests.ISAStackCompilerTests
 
 open NUnit.Framework
 open toy_comp_compiler.CompilerShared
+open toy_comp_compiler.UndefinedVariableAnalyzer
 open toy_comp_core.ResourceUtility
 open toy_comp_compiler.Parser
 open toy_comp_compiler.ConstantFolding
@@ -24,6 +25,7 @@ let testIfAllSampleProgramsCompilesAndInterpretsAsExpected () =
             sample
             |> read_sample_program
             |> parse_program
+            |> analyze_for_unassigned_variables
             |> fold_consts_in_program
             |> compile_program_isa_stack CompilationMode.ISA
 
