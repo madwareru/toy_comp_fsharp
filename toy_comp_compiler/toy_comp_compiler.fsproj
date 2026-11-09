@@ -10,14 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="CompilerShared.fs" />
     <Compile Include="Parser.fs" />
     <Compile Include="UndefinedVariableAnalyzer.fs" />
+    <Compile Include="ConstantFolding.fs" />
     <Compile Include="Interpreter.fs" />
-    <Compile Include="CompilerShared.fs" />
     <Compile Include="ISAStackCompiler.fs" />
     <Compile Include="ISARegCompiler.fs" />
     <Compile Include="ISAMemCompiler.fs" />
-    <Compile Include="ConstantFolding.fs" />
   </ItemGroup>
 
   <ItemGroup>

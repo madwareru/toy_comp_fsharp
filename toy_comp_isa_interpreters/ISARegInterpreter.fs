@@ -62,15 +62,7 @@ let interp_isa_reg_program =
             | Bin(bin_op, Register(dst), Register(lhs), Register(rhs)) :: next_pc ->
                 let lhs = reg_get lhs
                 let rhs = reg_get rhs
-
-                match bin_op with
-                | Add -> lhs + rhs
-                | Sub -> lhs - rhs
-                | Mul -> lhs * rhs
-                | Eq -> if lhs = rhs then 1 else 0
-                | Leq -> if lhs <= rhs then 1 else 0
-                | Lt -> if lhs < rhs then 1 else 0
-                |> reg_set dst
+                bin_op |> calc_binop lhs rhs |> reg_set dst
 
                 pc <- next_pc
 

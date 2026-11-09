@@ -1,6 +1,7 @@
 module toy_comp_compiler.Interpreter
 
 open System.Text
+open toy_comp_compiler.CompilerShared
 open toy_comp_core.ISAShared
 open toy_comp_core.AST
 
@@ -20,14 +21,7 @@ let interp_program (program: Program) =
             | Binary(bin_op, lhs, rhs) ->
                 let lhs = interp_expr lhs
                 let rhs = interp_expr rhs
-
-                match bin_op with
-                | Add -> lhs + rhs
-                | Sub -> lhs - rhs
-                | Mul -> lhs * rhs
-                | Eq -> if lhs = rhs then 1 else 0
-                | Leq -> if lhs <= rhs then 1 else 0
-                | Lt -> if lhs < rhs then 1 else 0
+                bin_op |> calc_binop lhs rhs
 
         let rec interp_block =
             function

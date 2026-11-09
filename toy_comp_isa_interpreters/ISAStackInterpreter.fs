@@ -68,15 +68,7 @@ let interp_isa_stack_program =
             | Bin(bin_op) :: next_pc ->
                 let rhs = stack_pop ()
                 let lhs = stack_pop ()
-
-                match bin_op with
-                | Add -> lhs + rhs
-                | Sub -> lhs - rhs
-                | Mul -> lhs * rhs
-                | Eq -> if lhs = rhs then 1 else 0
-                | Leq -> if lhs <= rhs then 1 else 0
-                | Lt -> if lhs < rhs then 1 else 0
-                |> stack_push
+                bin_op |> calc_binop lhs rhs |> stack_push
 
                 pc <- next_pc
 

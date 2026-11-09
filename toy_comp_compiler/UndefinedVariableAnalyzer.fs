@@ -2,92 +2,83 @@ module toy_comp_compiler.UndefinedVariableAnalyzer
 
 open toy_comp_core.ISAShared
 open toy_comp_core.AST
+open toy_comp_compiler.CompilerShared
 
 type private TrackedValue =
     | Known of int64
     | Unknown
 
 let analyze_for_unassigned_variables (Program root_block) : Program =
-    let rec eval_expr state expr =
+    let rec eval_expr expr assignments =
         match expr with
         | Constant(ImmValue value) -> Known value
         | Variable location ->
             let (MemoryLocation name) = location
-            match Map.tryFind location state with
+            match assignments |> Map.tryFind location with
             | Some value -> value
             | None -> failwith $"Undefined variable: {name}"
-        | Binary(op, lhs, rhs) ->
-            let lhs_value = eval_expr state lhs
-            let rhs_value = eval_expr state rhs
+        | Binary(bin_op, lhs, rhs) ->
+            let lhs_value = assignments |> eval_expr lhs
+            let rhs_value = assignments |> eval_expr rhs
             match lhs_value, rhs_value with
-            | Known lhs, Known rhs ->
-                match op with
-                | Add -> Known(lhs + rhs)
-                | Sub -> Known(lhs - rhs)
-                | Mul -> Known(lhs * rhs)
-                | Eq -> Known(if lhs = rhs then 1L else 0L)
-                | Lt -> Known(if lhs < rhs then 1L else 0L)
-                | Leq -> Known(if lhs <= rhs then 1L else 0L)
+            | Known lhs, Known rhs -> bin_op |> calc_binop lhs rhs |> Known
             | _ -> Unknown
 
     let rec assigned_locations (Block statements) =
-        statements
-        |> List.map (function
+        let stmt_locations = function
             | Assignment(dst, _) -> Set.singleton dst
             | Branch(_, then_block, else_block) ->
-                Set.union (assigned_locations then_block) (assigned_locations else_block)
+                let then_locations = assigned_locations then_block
+                let else_locations = assigned_locations else_block 
+                Set.union then_locations else_locations
             | WhileLoop(_, body) -> assigned_locations body
             | PutChar _
-            | PrintNumber _ -> Set.empty)
-        |> Set.unionMany
+            | PrintNumber _ -> Set.empty
+        
+        statements |> List.map stmt_locations |> Set.unionMany
 
     let invalidate assigned state =
-        state
-        |> Map.map (fun location value ->
-            if Set.contains location assigned then Unknown else value)
+        let invalidate_pair location value = if Set.contains location assigned then Unknown else value
+        state |> Map.map invalidate_pair
+    
+    let merge_branch_assignments then_assignments else_assignments =
+        let mapping = function
+            | Known lhs, Known rhs when lhs = rhs -> Known lhs
+            | _ -> Unknown
+        map_zip mapping then_assignments else_assignments
 
-    let merge_branches then_state else_state =
-        then_state
-        |> Map.fold (fun merged location then_value ->
-            match Map.tryFind location else_state with
-            | Some else_value ->
-                let value =
-                    match then_value, else_value with
-                    | Known lhs, Known rhs when lhs = rhs -> Known lhs
-                    | _ -> Unknown
-                Map.add location value merged
-            | None -> merged) Map.empty
-
-    let rec check_block state (Block statements) =
-        let mutable state = state
+    let rec check_block_and_gather_assignments parent_assignments (Block statements) =
+        let mutable block_assignments = parent_assignments
+        
+        let check_statement = function
+            | Assignment(dst, expr) ->
+                let value = block_assignments |> eval_expr expr
+                block_assignments <- Map.add dst value block_assignments
+            | PutChar expr
+            | PrintNumber expr ->
+                block_assignments |> eval_expr expr |> ignore
+            | Branch(cond, then_block, else_block) ->
+                match block_assignments |> eval_expr cond with
+                | Known 0L -> block_assignments <- check_block_and_gather_assignments block_assignments else_block
+                | Known _ -> block_assignments <- check_block_and_gather_assignments block_assignments then_block
+                | Unknown ->
+                    let then_assignments = check_block_and_gather_assignments block_assignments then_block
+                    let else_assignments = check_block_and_gather_assignments block_assignments else_block
+                    block_assignments <- merge_branch_assignments then_assignments else_assignments
+            | WhileLoop(cond, body) ->
+                match block_assignments |> eval_expr cond with
+                | Known 0L -> ()
+                | Known _ ->
+                    let body_assignments = body |> check_block_and_gather_assignments block_assignments
+                    block_assignments <- body_assignments |> invalidate (assigned_locations body)
+                | Unknown -> 
+                    check_block_and_gather_assignments block_assignments body |> ignore
+                    block_assignments <- invalidate (assigned_locations body) block_assignments
+        
         for statement in statements do
-            state <-
-                match statement with
-                | Assignment(dst, expr) ->
-                    let value = eval_expr state expr
-                    Map.add dst value state
-                | PutChar expr
-                | PrintNumber expr ->
-                    eval_expr state expr |> ignore
-                    state
-                | Branch(cond, then_block, else_block) ->
-                    match eval_expr state cond with
-                    | Known 0L -> check_block state else_block
-                    | Known _ -> check_block state then_block
-                    | Unknown ->
-                        let then_state = check_block state then_block
-                        let else_state = check_block state else_block
-                        merge_branches then_state else_state
-                | WhileLoop(cond, body) ->
-                    match eval_expr state cond with
-                    | Known 0L -> state
-                    | Known _ ->
-                        check_block state body
-                        |> invalidate (assigned_locations body)
-                    | Unknown ->
-                        check_block state body |> ignore
-                        invalidate (assigned_locations body) state
-        state
+            check_statement statement
+                
+        block_assignments
 
-    check_block Map.empty root_block |> ignore
+    root_block |> check_block_and_gather_assignments Map.empty |> ignore
     Program root_block

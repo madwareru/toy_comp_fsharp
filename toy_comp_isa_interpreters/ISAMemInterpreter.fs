@@ -55,15 +55,7 @@ let interp_isa_mem_program =
             | Bin(bin_op, dst, lhs, rhs) :: next_pc ->
                 let lhs = mem_get lhs
                 let rhs = mem_get rhs
-
-                match bin_op with
-                | Add -> lhs + rhs
-                | Sub -> lhs - rhs
-                | Mul -> lhs * rhs
-                | Eq -> if lhs = rhs then 1 else 0
-                | Leq -> if lhs <= rhs then 1 else 0
-                | Lt -> if lhs < rhs then 1 else 0
-                |> mem_set dst
+                bin_op |> calc_binop lhs rhs |> mem_set dst
 
                 pc <- next_pc
 
