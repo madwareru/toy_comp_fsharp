@@ -17,6 +17,14 @@ if 0:
     outn(100);
 end;
 
+if 0:
+    outn(100);
+else:
+end;
+
+if 1:
+end;
+
 if 1:
 else:
     outn(100);
