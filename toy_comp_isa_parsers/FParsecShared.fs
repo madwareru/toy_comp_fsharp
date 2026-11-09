@@ -4,7 +4,6 @@ open System
 open FParsec
 open toy_comp_core.ISAShared
 
-let flatten3 ((a, b), c) = a, b, c
 let flatten4 (((a, b), c), d) = a, b, c, d
 
 let private is_ident_char c = Char.IsAsciiLetterOrDigit c || c = '_'
