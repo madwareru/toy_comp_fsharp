@@ -1,0 +1,62 @@
+    LI [x], #7
+    LI [y], #5
+    MOV [copy], [x]
+    ADD [sum], [x], [y]
+    LI [tmp_0], #10
+    ADD [left], [tmp_0], [x]
+    LI [tmp_0], #10
+    ADD [right], [x], [tmp_0]
+    LI [tmp_0], #1
+    ADD [tmp_0], [x], [tmp_0]
+    LI [tmp_1], #2
+    ADD [tmp_1], [y], [tmp_1]
+    MUL [nested], [tmp_0], [tmp_1]
+    LI [tmp_0], #12
+    OUTN [tmp_0]
+    LI [tmp_0], #2
+    OUTN [tmp_0]
+    LI [tmp_0], #35
+    OUTN [tmp_0]
+    LI [tmp_0], #0
+    OUTN [tmp_0]
+    LI [tmp_0], #0
+    OUTN [tmp_0]
+    LI [tmp_0], #1
+    OUTN [tmp_0]
+    OUTN [x]
+    OUTN [x]
+    OUTN [x]
+    OUTN [x]
+    OUTN [x]
+    LI [tmp_0], #0
+    OUTN [tmp_0]
+    LI [tmp_0], #0
+    OUTN [tmp_0]
+    ADD [tmp_0], [x], [y]
+    OUTN [tmp_0]
+    LI [tmp_0], #10
+    ADD [tmp_0], [tmp_0], [x]
+    OUTN [tmp_0]
+    LI [tmp_0], #10
+    ADD [tmp_0], [x], [tmp_0]
+    OUTN [tmp_0]
+    LI [tmp_0], #1
+    ADD [tmp_0], [x], [tmp_0]
+    LI [tmp_1], #2
+    ADD [tmp_1], [y], [tmp_1]
+    MUL [tmp_0], [tmp_0], [tmp_1]
+    OUTN [tmp_0]
+    EQ [tmp_0], [x], [y]
+    OUTN [tmp_0]
+    LT [tmp_0], [x], [y]
+    OUTN [tmp_0]
+    LE [tmp_0], [x], [y]
+    OUTN [tmp_0]
+    OUTN [copy]
+    OUTN [sum]
+    OUTN [left]
+    OUTN [right]
+    OUTN [nested]
+    LI [tmp_0], #61
+    ADD [tmp_0], [x], [tmp_0]
+    OUT [tmp_0]

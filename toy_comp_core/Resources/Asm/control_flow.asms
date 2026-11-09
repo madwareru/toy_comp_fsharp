@@ -1,0 +1,76 @@
+    PUSH #0
+    ST [zero]
+    PUSH #1
+    ST [one]
+    PUSH #1
+    OUTN
+    PUSH #2
+    OUTN
+    LD [zero]
+    JZ @0
+    PUSH #100
+    OUTN
+@0:
+    LD [one]
+    JZ @1
+    PUSH #3
+    OUTN
+@1:
+    LD [zero]
+    JZ @2
+    PUSH #100
+    OUTN
+    JMP @3
+@2:
+    PUSH #4
+    OUTN
+@3:
+    LD [one]
+    JZ @4
+    PUSH #5
+    OUTN
+    JMP @5
+@4:
+    PUSH #100
+    OUTN
+@5:
+    LD [zero]
+    LD [one]
+    ADD
+    JZ @6
+    PUSH #6
+    OUTN
+@6:
+    LD [zero]
+    LD [one]
+    ADD
+    JZ @7
+    PUSH #7
+    OUTN
+    JMP @8
+@7:
+    PUSH #100
+    OUTN
+@8:
+@9:
+    LD [zero]
+    JZ @10
+    PUSH #100
+    OUTN
+    JMP @9
+@10:
+    PUSH #0
+    ST [i]
+@11:
+    LD [i]
+    PUSH #2
+    LT
+    JZ @12
+    LD [i]
+    OUTN
+    LD [i]
+    PUSH #1
+    ADD
+    ST [i]
+    JMP @11
+@12:

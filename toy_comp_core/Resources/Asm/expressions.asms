@@ -1,0 +1,98 @@
+    PUSH #7
+    ST [x]
+    PUSH #5
+    ST [y]
+    LD [x]
+    ST [copy]
+    LD [x]
+    LD [y]
+    ADD
+    ST [sum]
+    PUSH #10
+    LD [x]
+    ADD
+    ST [left]
+    LD [x]
+    PUSH #10
+    ADD
+    ST [right]
+    LD [x]
+    PUSH #1
+    ADD
+    LD [y]
+    PUSH #2
+    ADD
+    MUL
+    ST [nested]
+    PUSH #12
+    OUTN
+    PUSH #2
+    OUTN
+    PUSH #35
+    OUTN
+    PUSH #0
+    OUTN
+    PUSH #0
+    OUTN
+    PUSH #1
+    OUTN
+    LD [x]
+    OUTN
+    LD [x]
+    OUTN
+    LD [x]
+    OUTN
+    LD [x]
+    OUTN
+    LD [x]
+    OUTN
+    PUSH #0
+    OUTN
+    PUSH #0
+    OUTN
+    LD [x]
+    LD [y]
+    ADD
+    OUTN
+    PUSH #10
+    LD [x]
+    ADD
+    OUTN
+    LD [x]
+    PUSH #10
+    ADD
+    OUTN
+    LD [x]
+    PUSH #1
+    ADD
+    LD [y]
+    PUSH #2
+    ADD
+    MUL
+    OUTN
+    LD [x]
+    LD [y]
+    EQ
+    OUTN
+    LD [x]
+    LD [y]
+    LT
+    OUTN
+    LD [x]
+    LD [y]
+    LE
+    OUTN
+    LD [copy]
+    OUTN
+    LD [sum]
+    OUTN
+    LD [left]
+    OUTN
+    LD [right]
+    OUTN
+    LD [nested]
+    OUTN
+    LD [x]
+    PUSH #61
+    ADD
+    OUT

@@ -1,0 +1,60 @@
+    LI [zero], #0
+    LI [one], #1
+    LI [tmp_0], #1
+    OUTN [tmp_0]
+    LI [tmp_0], #2
+    OUTN [tmp_0]
+    JZ @0, [zero]
+    LI [tmp_0], #100
+    OUTN [tmp_0]
+@0:
+    JZ @1, [one]
+    LI [tmp_0], #3
+    OUTN [tmp_0]
+@1:
+    JZ @2, [zero]
+    LI [tmp_0], #100
+    OUTN [tmp_0]
+    JMP @3
+@2:
+    LI [tmp_0], #4
+    OUTN [tmp_0]
+@3:
+    JZ @4, [one]
+    LI [tmp_0], #5
+    OUTN [tmp_0]
+    JMP @5
+@4:
+    LI [tmp_0], #100
+    OUTN [tmp_0]
+@5:
+    ADD [tmp_0], [zero], [one]
+    JZ @6, [tmp_0]
+    LI [tmp_0], #6
+    OUTN [tmp_0]
+@6:
+    ADD [tmp_0], [zero], [one]
+    JZ @7, [tmp_0]
+    LI [tmp_0], #7
+    OUTN [tmp_0]
+    JMP @8
+@7:
+    LI [tmp_0], #100
+    OUTN [tmp_0]
+@8:
+@9:
+    JZ @10, [zero]
+    LI [tmp_0], #100
+    OUTN [tmp_0]
+    JMP @9
+@10:
+    LI [i], #0
+@11:
+    LI [tmp_0], #2
+    LT [tmp_0], [i], [tmp_0]
+    JZ @12, [tmp_0]
+    OUTN [i]
+    LI [tmp_0], #1
+    ADD [i], [i], [tmp_0]
+    JMP @11
+@12:

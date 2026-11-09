@@ -49,7 +49,9 @@ let testIfAllSampleAssemblyParses () =
           SampleAsm.Sierpinski
           SampleAsm.Carpet
           SampleAsm.Mandelbrot
-          SampleAsm.Primes ] do
+          SampleAsm.Primes
+          SampleAsm.Expressions
+          SampleAsm.ControlFlow ] do
         let _ = sample |> read_sample_asm ISAKind.Reg |> parse_isa_reg
         ()
 
