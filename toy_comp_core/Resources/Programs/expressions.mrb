@@ -1,0 +1,37 @@
+x = 7;
+y = 5;
+copy = x;
+sum = x + y;
+left = 10 + x;
+right = x + 10;
+nested = (x + 1) * (y + 2);
+
+outn(7 + 5);
+outn(7 - 5);
+outn(7 * 5);
+outn(7 == 5);
+outn(7 < 5);
+outn(7 <= 7);
+
+outn(x + 0);
+outn(0 + x);
+outn(x - 0);
+outn(1 * x);
+outn(x * 1);
+outn(0 * x);
+outn(x * 0);
+
+outn(x + y);
+outn(10 + x);
+outn(x + 10);
+outn((x + 1) * (y + 2));
+outn(x == y);
+outn(x < y);
+outn(x <= y);
+
+outn(copy);
+outn(sum);
+outn(left);
+outn(right);
+outn(nested);
+out(x + 61);

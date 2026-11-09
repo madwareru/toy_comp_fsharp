@@ -1,0 +1,67 @@
+zero = 0;
+one = 1;
+
+if 0:
+    outn(100);
+else:
+    outn(1);
+end;
+
+if 2:
+    outn(2);
+else:
+    outn(100);
+end;
+
+if 0:
+    outn(100);
+end;
+
+if 1:
+else:
+    outn(100);
+end;
+
+if zero:
+    outn(100);
+end;
+
+if one:
+    outn(3);
+end;
+
+if zero:
+    outn(100);
+else:
+    outn(4);
+end;
+
+if one:
+    outn(5);
+else:
+    outn(100);
+end;
+
+if zero + one:
+    outn(6);
+end;
+
+if zero + one:
+    outn(7);
+else:
+    outn(100);
+end;
+
+while 0:
+    outn(100);
+end;
+
+while zero:
+    outn(100);
+end;
+
+i = 0;
+while i < 2:
+    outn(i);
+    i = i + 1;
+end;

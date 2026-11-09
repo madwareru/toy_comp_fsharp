@@ -17,6 +17,8 @@ type SampleAsm =
     | Carpet
     | Mandelbrot
     | Primes
+    | Expressions
+    | ControlFlow
 
 let private get_file_name =
     function
@@ -26,6 +28,8 @@ let private get_file_name =
     | Carpet -> "carpet"
     | Mandelbrot -> "mandelbrot"
     | Primes -> "primes"
+    | Expressions -> "expressions"
+    | ControlFlow -> "control_flow"
 
 type ISAKind =
     | Mem
@@ -60,4 +64,6 @@ let sample_collection () = [
     SampleAsm.Sierpinski
     SampleAsm.Carpet
     SampleAsm.Mandelbrot
+    SampleAsm.Expressions
+    SampleAsm.ControlFlow
 ]

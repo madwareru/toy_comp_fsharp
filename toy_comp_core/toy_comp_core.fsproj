@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -43,12 +43,16 @@
     <EmbeddedResource Include="Resources\ExpectedOuts\mandelbrot.txt" />
     <EmbeddedResource Include="Resources\ExpectedOuts\primes.txt" />
     <EmbeddedResource Include="Resources\ExpectedOuts\sierpinski.txt" />
+    <EmbeddedResource Include="Resources\ExpectedOuts\expressions.txt" />
+    <EmbeddedResource Include="Resources\ExpectedOuts\control_flow.txt" />
     <EmbeddedResource Include="Resources\Programs\primes.mrb" />
     <EmbeddedResource Include="Resources\Programs\fact.mrb" />
     <EmbeddedResource Include="Resources\Programs\fib.mrb" />
     <EmbeddedResource Include="Resources\Programs\carpet.mrb" />
     <EmbeddedResource Include="Resources\Programs\sierpinski.mrb" />
     <EmbeddedResource Include="Resources\Programs\mandelbrot.mrb" />
+    <EmbeddedResource Include="Resources\Programs\expressions.mrb" />
+    <EmbeddedResource Include="Resources\Programs\control_flow.mrb" />
   </ItemGroup>
 
 </Project>
