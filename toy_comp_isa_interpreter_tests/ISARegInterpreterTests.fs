@@ -11,6 +11,9 @@ let testIfAllSampleAssemblyParsesAndInterpretsAsExpected () =
         let expected_out = sample |> read_expected_out
 
         let result =
-            sample |> read_sample_asm ISAKind.Reg |> parse_isa_reg |> interp_isa_reg_program
+            sample
+            |> read_sample_asm ISAKind.Reg
+            |> parse_isa_reg
+            |> interp_isa_reg_program
 
         Assert.AreEqual(expected_out, result)

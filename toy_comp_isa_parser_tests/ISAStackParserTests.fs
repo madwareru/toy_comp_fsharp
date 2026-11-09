@@ -38,20 +38,20 @@ let testIfFactorialAssemblyParses () =
                   { Ops = [ Ld(MemoryLocation "r"); OutN ]
                     NextBlockLabel = ProgramEndLabel } ]
         )
-    let factorialAssembly = SampleAsm.Fact |> read_sample_asm ISAKind.Stack
+    let factorialAssembly = Sample.Fact |> read_sample_asm ISAKind.Stack
     Assert.AreEqual(factorialProgram, factorialAssembly |> parse_isa_stack)
 
 [<Test>]
 let testIfAllSampleAssemblyParses () =
     for sample in
-        [ SampleAsm.Fact
-          SampleAsm.Fib
-          SampleAsm.Sierpinski
-          SampleAsm.Carpet
-          SampleAsm.Mandelbrot
-          SampleAsm.Primes
-          SampleAsm.Expressions
-          SampleAsm.ControlFlow ] do
+        [ Sample.Fact
+          Sample.Fib
+          Sample.Sierpinski
+          Sample.Carpet
+          Sample.Mandelbrot
+          Sample.Primes
+          Sample.Expressions
+          Sample.ControlFlow ] do
         let _ = sample |> read_sample_asm ISAKind.Stack |> parse_isa_stack
         ()
 

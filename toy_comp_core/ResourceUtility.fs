@@ -10,7 +10,7 @@ let private read_resource_as_text res_name =
     use reader = new StreamReader(stream)
     reader.ReadToEnd()
 
-type SampleAsm =
+type Sample =
     | Fact
     | Fib
     | Sierpinski
@@ -58,12 +58,12 @@ let read_expected_out sample =
     res_name |> read_resource_as_text
     
 let sample_collection () = [
-    SampleAsm.Fib
-    SampleAsm.Fact
-    SampleAsm.Primes
-    SampleAsm.Sierpinski
-    SampleAsm.Carpet
-    SampleAsm.Mandelbrot
-    SampleAsm.Expressions
-    SampleAsm.ControlFlow
+    Sample.Fib
+    Sample.Fact
+    Sample.Primes
+    Sample.Sierpinski
+    Sample.Carpet
+    Sample.Mandelbrot
+    Sample.Expressions
+    Sample.ControlFlow
 ]

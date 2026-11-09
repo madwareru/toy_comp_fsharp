@@ -6,7 +6,7 @@ open toy_comp_core.ResourceUtility
 open toy_comp_core.AST
 open toy_comp_compiler.Parser
 
-let factorialAssembly = SampleAsm.Fact |> read_sample_program
+let factorialAssembly = Sample.Fact |> read_sample_program
 
 let factorialProgram =
     Program(
@@ -37,14 +37,14 @@ let testIfFactorialProgramParsesCorrectly () =
 [<Test>]
 let testIfAllSampleProgramsParses () =
     for sample in
-        [ SampleAsm.Fact
-          SampleAsm.Fib
-          SampleAsm.Sierpinski
-          SampleAsm.Carpet
-          SampleAsm.Mandelbrot
-          SampleAsm.Primes
-          SampleAsm.Expressions
-          SampleAsm.ControlFlow ] do
+        [ Sample.Fact
+          Sample.Fib
+          Sample.Sierpinski
+          Sample.Carpet
+          Sample.Mandelbrot
+          Sample.Primes
+          Sample.Expressions
+          Sample.ControlFlow ] do
         let _ = sample |> read_sample_program |> parse_program
         ()
 
