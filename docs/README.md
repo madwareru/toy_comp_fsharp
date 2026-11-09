@@ -12,15 +12,14 @@ This directory contains the language reference, instruction-set specifications, 
    - Memory-to-memory: [ISA](isa/MemoryToMemoryISA.md) and [bytecode](isa/MemoryToMemoryBytecode.md)
 4. Read [Undefined Variable Analyzer](analyzers/UndefinedVariableAnalyzer.md) for the semantic-analysis algorithm and its control-flow diagrams.
 
-## Design and Implementation Notes
+## AI-assisted Design and Implementation Notes
 
-The analyzer's design history and implementation tasks are kept separately from the language reference:
-
-- [Original analyzer implementation plan](superpowers/plans/UndefinedVariableAnalyzerImplementationPlan.md)
-- [Constant-tracking design](superpowers/specs/2026-11-08-undefined-variable-constant-tracking-design.md)
-- [Constant-tracking implementation plan](superpowers/plans/2026-11-08-undefined-variable-constant-tracking.md)
-
-These documents explain why behavior was chosen and how it was implemented. The language and ISA documents describe the current behavior to rely on.
+Design history and implementation tasks on various project improvements made with `superpowers`:
+- [Original undefined variable analyzer implementation plan](superpowers/plans/UndefinedVariableAnalyzerImplementationPlan.md)
+- [Constant-tracking design for undefined variable analyzer](superpowers/specs/2026-11-08-undefined-variable-constant-tracking-design.md)
+- [Constant-tracking undefined variable analyzer implementation plan](superpowers/plans/2026-11-08-undefined-variable-constant-tracking.md)
+- [Additional samples for code coverage improvement design](superpowers/specs/2026-11-09-coverage-sample-programs-design.md)
+- [Additional samples for code coverage improvement plan](superpowers/plans/2026-11-09-coverage-sample-programs.md)
 
 ## Updating Documentation
 
