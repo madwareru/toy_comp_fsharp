@@ -5,7 +5,6 @@ open toy_comp_core.ISAShared
 open toy_comp_core.AST
 open toy_comp_core.ISAReg
 open toy_comp_compiler.CompilerShared
-open toy_comp_compiler.UndefinedVariableAnalyzer
 
 type private Instruction =
     | Op of Operation

@@ -8,13 +8,7 @@ open toy_comp_compiler.Interpreter
 
 [<Test>]
 let testIfAllSampleProgramsParsesAndInterpretsAsExpected () =
-    for sample in
-        [ SampleAsm.Fib
-          SampleAsm.Fact
-          SampleAsm.Primes
-          SampleAsm.Sierpinski
-          SampleAsm.Carpet
-          SampleAsm.Mandelbrot ] do
+    for sample in sample_collection () do
         let expected_out = sample |> read_expected_out
 
         let result =

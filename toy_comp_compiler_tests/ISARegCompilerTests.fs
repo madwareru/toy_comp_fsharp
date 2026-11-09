@@ -12,13 +12,7 @@ open toy_comp_isa_interpreters.ISARegInterpreter
 
 [<Test>]
 let testIfAllSampleProgramsCompilesAndInterpretsAsExpected () =
-    for sample in
-        [ SampleAsm.Fib
-          SampleAsm.Fact
-          SampleAsm.Primes
-          SampleAsm.Sierpinski
-          SampleAsm.Carpet
-          SampleAsm.Mandelbrot ] do
+    for sample in sample_collection () do
         let expected_out = sample |> read_expected_out
 
         let isa =
@@ -36,13 +30,7 @@ let testIfAllSampleProgramsCompilesAndInterpretsAsExpected () =
 
 [<Test>]
 let testIfAllSampleProgramsCompilesToTextCorrectly () =
-    for sample in
-        [ SampleAsm.Fib
-          SampleAsm.Fact
-          SampleAsm.Primes
-          SampleAsm.Sierpinski
-          SampleAsm.Carpet
-          SampleAsm.Mandelbrot ] do
+    for sample in sample_collection () do
         let expected_out = sample |> read_expected_out
 
         let isa =

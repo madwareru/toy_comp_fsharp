@@ -14,9 +14,6 @@ let private parse_assignment_op = parse_token "=" >>% ()
 let private parse_lparen = parse_token "("
 let private parse_rparen = parse_token ")"
 
-let private flatten3 ((a, b), c) = a, b, c
-let private flatten4 (((a, b), c), d) = a, b, c, d
-
 let private is_ident_char c = Char.IsAsciiLetterOrDigit c || c = '_'
 
 let parse_var_name: Parser<MemoryLocation, unit> =
@@ -55,8 +52,7 @@ let parse_if_else: Parser<Statement, unit> =
     .>> parse_colon
     .>>. parse_block
     .>> parse_token "end"
-    |>> flatten3
-    |>> Branch
+    |>> fun ((cond, then_block), else_block) -> Branch(cond, then_block, else_block)
 
 let parse_if: Parser<Statement, unit> =
     parse_token "if" >>. parse_expr .>> parse_colon .>>. parse_block

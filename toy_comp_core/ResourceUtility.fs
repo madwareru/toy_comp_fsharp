@@ -52,3 +52,12 @@ let read_expected_out sample =
     let name_str = sample |> get_file_name
     let res_name = $"ExpectedOuts.{name_str}.txt"
     res_name |> read_resource_as_text
+    
+let sample_collection () = [
+    SampleAsm.Fib
+    SampleAsm.Fact
+    SampleAsm.Primes
+    SampleAsm.Sierpinski
+    SampleAsm.Carpet
+    SampleAsm.Mandelbrot
+]

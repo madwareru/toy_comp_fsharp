@@ -1,7 +1,6 @@
 module toy_comp_compiler.Interpreter
 
 open System.Text
-open toy_comp_compiler.CompilerShared
 open toy_comp_core.ISAShared
 open toy_comp_core.AST
 

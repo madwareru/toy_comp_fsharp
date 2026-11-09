@@ -108,10 +108,6 @@ let compile_program_isa_mem (mode: CompilationMode) (program: SourceProgram) : T
                 seq {
                     for statement in statements do
                         match statement with
-                        | Assignment(dst, Constant(src)) -> yield Op(Li(dst, src))
-                        | Assignment(dst, Variable(src)) -> yield Op(Mov(dst, src))
-                        | Assignment(dst, Binary(bin_op, Variable(lhs), Variable(rhs))) ->
-                            yield Op(Bin(bin_op, dst, lhs, rhs))
                         | Assignment(dst, src) -> yield! compile_expr_direct dst src
                         | PutChar(Variable(src)) -> yield Op(OutС(src))
                         | PutChar(src) ->
